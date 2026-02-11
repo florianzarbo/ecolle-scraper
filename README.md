@@ -4,4 +4,4 @@ Mettre vos identifiants
 
 uv sync
 
-uv run main.py
+uv run parse.py
