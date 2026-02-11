@@ -1,6 +1,7 @@
 #! .venv/bin/python
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 from urllib.parse import urljoin
 import os
 from dotenv import load_dotenv
@@ -95,9 +96,67 @@ def fetch_agenda(session: requests.Session) -> str:
     return response.text
 
 
+def parse_agenda_to_csv(html_text):
+    """
+    Parse e-colle agenda HTML and save to agenda.csv.
+
+    Args:
+        html_text (str): Raw HTML from requests.get(url).text
+
+    Returns:
+        pd.DataFrame: Parsed agenda data
+    """
+    soup = BeautifulSoup(html_text, "html.parser")
+    table = soup.find("table", class_="tableausimple")
+    rows = []
+
+    if not table:
+        print("No agenda table found.")
+        return pd.DataFrame()
+
+    for tr in table.find_all("tr")[1:]:  # Skip header
+        tds = tr.find_all("td")
+        if len(tds) == 6:
+            date_str = tds[0].get_text(strip=True)
+            time_str = tds[1].get_text(strip=True)
+            matiere_td = tds[2]
+            matiere = matiere_td.get_text(strip=True)
+            couleur_style = matiere_td.get("style", "")
+            couleur = (
+                couleur_style.replace("background-color:", "")
+                .replace("#", "")
+                .strip("; ")
+            )
+            colleur = tds[3].get_text(strip=True)
+            programme_td = tds[4]
+            programme_links = [a["href"] for a in programme_td.find_all("a", href=True)]
+            popup = programme_td.find("div", class_="popup")
+            popup_text = popup.get_text(strip=True) if popup else ""
+            salle = tds[5].get_text(strip=True)
+
+            rows.append(
+                {
+                    "date": date_str,
+                    "heure": time_str,
+                    "matiere": matiere,
+                    "couleur": couleur,
+                    "colleur": colleur,
+                    "programme_links": "|".join(programme_links),  # CSV-safe
+                    "popup": popup_text,
+                    "salle": salle,
+                }
+            )
+
+    df = pd.DataFrame(rows)
+    df.to_csv("agenda.csv", index=False)
+    print(f"Saved {len(df)} rows to agenda.csv")
+    return df
+
+
 def main():
     ses = requests.Session()
     login(ses, USERNAME, PASSWORD)
+    parse_agenda_to_csv(fetch_agenda(ses))
 
 
 if __name__ == "__main__":
