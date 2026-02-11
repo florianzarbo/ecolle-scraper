@@ -1,6 +1,14 @@
+You need to have uv installed
+
+Debian based :
+sudo apt install uv
+
+Arch based :
+sudo pacman -S uv
+
 cp .env.example .env
 
-Mettre vos identifiants
+Set the needed variables
 
 uv sync
 
