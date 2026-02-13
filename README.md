@@ -1,15 +1,41 @@
-You need to have uv installed
 
-Debian based :
+# ntfy Notifications from Ecolle
+
+This project enables sending ntfy notifications to a specific topic and server using your "colles" from an Ecolle instance.
+
+## Prerequisites
+- **uv** (Python package manager) must be installed.
+
+### Installation
+**Debian-based systems:**
+```bash
 sudo apt install uv
+```
 
-Arch based :
+**Arch Linux:**
+```bash
 sudo pacman -S uv
+```
 
-cp .env.example .env
+## Quick Start
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-Set the needed variables
+2. Edit `.env` and set the required variables (e.g., Ecolle credentials, ntfy server/topic).
 
-uv sync
+3. Install dependencies:
+   ```bash
+   uv sync
+   ```
 
-uv run parse.py
+4. Run the application:
+   ```bash
+   uv run main.py
+   ```
+
+## Features
+- Seamless integration between Ecolle "colles" and ntfy
+- Configurable via `.env` for easy self-hosting
+- Lightweight Python-based solution
