@@ -1,5 +1,8 @@
+
+__pycache__/
+.venv
 .env
 
 
 certs/*
-agenda.csv
+output/*

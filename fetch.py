@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load credentials from .env file
 load_dotenv()
 
-BASE_URL = "https://colles.janson-de-sailly.fr"
+BASE_URL = os.getenv("BASE_URL", "")
 LOGIN_URL = urljoin(BASE_URL, "/eleve/")
 AGENDA_URL = urljoin(BASE_URL, "/eleve/action/agenda")
 
@@ -74,7 +74,7 @@ def login(session: requests.Session, username: str, password: str) -> bool:
         )
         response.raise_for_status()
 
-        if "Déconlnexion" in response.text:
+        if "Déconnexion" in response.text:
             print("[+] Login successful!")
             return True
         else:
@@ -148,16 +148,16 @@ def parse_agenda_to_csv(html_text):
             )
 
     df = pd.DataFrame(rows)
-    df.to_csv("agenda.csv", index=False)
+    df.to_csv("output/agenda.csv", index=False)
     print(f"Saved {len(df)} rows to agenda.csv")
     return df
 
 
-def main():
+def fetch_and_save():
     ses = requests.Session()
     login(ses, USERNAME, PASSWORD)
     parse_agenda_to_csv(fetch_agenda(ses))
 
 
 if __name__ == "__main__":
-    main()
+    fetch_and_save()

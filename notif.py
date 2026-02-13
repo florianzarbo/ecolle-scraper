@@ -1,4 +1,3 @@
-import csv
 import requests
 from dotenv import load_dotenv
 import os
@@ -7,7 +6,7 @@ load_dotenv()
 
 NTFY_TOPIC = os.getenv("NTFY_TOPIC", "")
 NTFY_SERVER = os.getenv("NTFY_SERVER", "https://ntfy.sh")
-
+NTFY_TITLE = os.getenv("NTFY_TITLE", "")
 
 SELF_SIGNED_CERTIFICATE = os.getenv("SELF_SIGNED_CERTIFICATE", "False").lower() in [
     "true"
@@ -23,6 +22,5 @@ def send_ntfy_message(message: str, **headers):
     response = requests.post(url, data=message.encode(), headers=headers, verify=verify)
     response.raise_for_status()
 
-
-# Usage
-send_ntfy_message("Trusted CA test!", Title="test title")
+def send_colle(colle):
+    send_ntfy_message(f"{colle["matiere"]} {colle["date"]} {colle["heure"]} {colle["salle"]} {colle["colleur"]}", Title=NTFY_TITLE)
