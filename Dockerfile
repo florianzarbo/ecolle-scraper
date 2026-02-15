@@ -1,4 +1,5 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.13-slim-bookworm AS builder
+WORKDIR /app
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends locales \
@@ -6,24 +7,24 @@ RUN apt-get update \
  && locale-gen \
  && rm -rf /var/lib/apt/lists/*
 
-ENV LANG=fr_FR.UTF-8 \
-    LANGUAGE=fr_FR:fr \
-    LC_ALL=fr_FR.UTF-8
+ENV UV_SYSTEM_PYTHON=1 UV_NO_CACHE=1
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY pyproject.toml uv.lock .python-version ./
+RUN uv sync --frozen --no-dev
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/  
 
-ENV UV_SYSTEM_PYTHON=1  
 
+FROM python:3.13-slim-bookworm AS runtime
 WORKDIR /app
 
-COPY *.py /app
-COPY .python-version /app/.
-COPY pyproject.toml /app/.
-COPY uv.lock /app/.
+COPY --from=builder /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive
+COPY --from=builder /etc/locale.gen /etc/locale.gen
 
-RUN mkdir /app/output
+ENV LANG=fr_FR.UTF-8 LANGUAGE=fr_FR:fr LC_ALL=fr_FR.UTF-8
+ENV PATH="/app/.venv/bin:$PATH"
 
-RUN uv sync
+COPY --from=builder /app/.venv /app/.venv
+COPY *.py /app/
+RUN mkdir -p /app/output
 
-
-ENTRYPOINT ["uv", "run", "main.py"]
+ENTRYPOINT ["/app/.venv/bin/python", "main.py"]
