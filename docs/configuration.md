@@ -23,7 +23,7 @@ Base URL of your institution's e-colle website.
 - Example:
 
   
-        BASE_URL="https://ecolle.example.com"
+        BASE_URL=https://ecolle.example.com
   
 
 - Notes: Include `https://` and use the site's base URL (no extra path unless required by your institution).
@@ -84,7 +84,7 @@ The title used for notifications.
 
 - Example:
 
-        NTFY_TITLE="Today's colles"
+        NTFY_TITLE=Today's colles
 
 
 - Tip: Keep quotes if there are spaces.
@@ -129,13 +129,13 @@ Path to the Root CA file (PEM) that signed your TLS certificate.
 ## Example `.env`
 
 ```env
-BASE_URL="https://ecolle.example.com"
+BASE_URL=https://ecolle.example.com
 COLLES_USERNAME=alice
 COLLES_PASSWORD=change-me
 NUMBER_OF_COLLES_TO_SHOW=2
 
 NTFY_TOPIC=mp2i-9f3a2c1d
-NTFY_TITLE="Today's colles"
+NTFY_TITLE=Today's colles
 
 # Optional:
 # NTFY_SERVER=https://ntfy.example.org

@@ -3,6 +3,8 @@
 
 This project enables sending ntfy notifications to a specific topic and server using your "colles" from an Ecolle instance.
 
+Full documentation [here](https://florianzarbo.github.io/ecolle-scraper/)
+
 ## Prerequisites
 - **uv** (Python package manager) must be installed.
 
@@ -34,8 +36,3 @@ sudo pacman -S uv
    ```bash
    uv run main.py
    ```
-
-## Features
-- Seamless integration between Ecolle "colles" and ntfy
-- Configurable via `.env` for easy self-hosting
-- Lightweight Python-based solution
