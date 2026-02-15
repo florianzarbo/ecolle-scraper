@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://florianzarbo.github.io/ecolle-scraper/</loc>
+         <loc>https://ecolle-scraper.zarbo.dev/</loc>
          <lastmod>2026-02-15</lastmod>
     </url>
     <url>
-         <loc>https://florianzarbo.github.io/ecolle-scraper/configuration/</loc>
+         <loc>https://ecolle-scraper.zarbo.dev/configuration/</loc>
          <lastmod>2026-02-15</lastmod>
     </url>
     <url>
-         <loc>https://florianzarbo.github.io/ecolle-scraper/getting-started/</loc>
+         <loc>https://ecolle-scraper.zarbo.dev/getting-started/</loc>
          <lastmod>2026-02-15</lastmod>
     </url>
 </urlset>
