@@ -5,4 +5,4 @@ This project enables sending ntfy notifications to a specific topic and server u
 
 - [Getting started](getting-started.md)
 
-- [Configuration](env.md)
+- [Configuration](configuration.md)

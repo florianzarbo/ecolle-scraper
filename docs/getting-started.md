@@ -22,7 +22,7 @@
         cp .env.example .env
 
 2. Edit .env and set the required variables.
-See [Configuration](env.md).
+See [Configuration](configuration.md).
 
 3. Install dependencies:
 
