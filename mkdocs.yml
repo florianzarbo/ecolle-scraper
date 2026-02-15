@@ -1,0 +1,16 @@
+site_name: E-colle scraper
+site_url: https://florianzarbo.github.io/ecolle-scraper
+repo_url: https://github.com/florianzarbo/ecolle-scraper
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Configuration: env.md
+theme:
+  name: material
+  font:
+    text: Roboto
+    code: Roboto Mono
+  palette: 
+    scheme: slate
+    primary: deep purple
+    accent: pink
