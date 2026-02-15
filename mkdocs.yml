@@ -1,5 +1,5 @@
 site_name: E-colle scraper
-site_url: https://florianzarbo.github.io/ecolle-scraper
+site_url: https://ecolle-scraper.zarbo.dev
 repo_url: https://github.com/florianzarbo/ecolle-scraper
 nav:
   - Home: index.md
