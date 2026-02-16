@@ -317,66 +317,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#docker-compose-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Docker compose (recommended)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#debian-based-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Debian-based systems:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#arch-based-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arch-based systems:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#native" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Native
       
     </span>
   </a>
@@ -445,66 +400,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#docker-compose-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Docker compose (recommended)
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#debian-based-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Debian-based systems:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#arch-based-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arch-based systems:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#native" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Native
       
     </span>
   </a>
@@ -532,38 +442,19 @@
 
 
 <h1 id="ntfy-notifications-from-ecolle">ntfy Notifications from Ecolle</h1>
-<h2 id="prerequisites">Prerequisites</h2>
-<ul>
-<li><strong>uv</strong> (Python package manager) must be installed.</li>
-</ul>
-<h3 id="installation">Installation</h3>
-<h4 id="debian-based-systems">Debian-based systems:</h4>
-<pre><code>sudo apt install uv
-</code></pre>
-<h4 id="arch-based-systems">Arch-based systems:</h4>
-<pre><code>sudo pacman -S uv
-</code></pre>
-<h2 id="quick-start">Quick Start</h2>
+<h3 id="docker-compose-recommended">Docker compose (recommended)</h3>
 <ol>
-<li>
-<p>Copy the example environment file:</p>
-<pre><code>cp .env.example .env
-</code></pre>
-</li>
-<li>
-<p>Edit .env and set the required variables.
-See <a href="../configuration/">Configuration</a>.</p>
-</li>
-<li>
-<p>Install dependencies:</p>
-<pre><code>uv sync
-</code></pre>
-</li>
-<li>
-<p>Run the application:</p>
-<pre><code>uv run main.py
-</code></pre>
-</li>
+<li>Install <strong><a href="https://docs.docker.com/get-started/get-docker/">docker</a></strong></li>
+<li>Copy <a href="../docker-compose.yml">docker-compose.yml</a></li>
+<li>Edit required variables</li>
+<li><code>docker compose up -d</code></li>
+</ol>
+<h3 id="native">Native</h3>
+<ol>
+<li>Install <strong><a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a></strong></li>
+<li><code>git clone https://github.com/florianzarbo/ecolle-scraper.git</code></li>
+<li>Edit <code>.env</code>, see <a href="../configuration/">configuration</a></li>
+<li><code>uv run main.py</code></li>
 </ol>
 
 
