@@ -144,7 +144,7 @@ The title used for notifications.
 ## Optional variables
 
 
-### NTFY_FORMAT
+### `NTFY_FORMAT`
         
 You can change the format of your notification with a format string.
 
