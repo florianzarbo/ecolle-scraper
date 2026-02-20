@@ -22,6 +22,10 @@ services:
         - NTFY_TOPIC=YourTopicName
         - NTFY_TITLE=Today's colles
 
+        # The format you want your message to have (see documentation)
+        # Default : {matiere} {date} {heure} {salle} {colleur}
+        # NTFY_FORMAT=
+
         # Set to true if using a self signed certificate for your instance
         # Default : False
         # - SELF_SIGNED_CERTIFICATE=true

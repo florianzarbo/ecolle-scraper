@@ -493,6 +493,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ntfy_format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTFY_FORMAT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ntfy_server" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -738,6 +749,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ntfy_format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTFY_FORMAT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ntfy_server" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -847,6 +869,10 @@
         - NTFY_TOPIC=YourTopicName
         - NTFY_TITLE=Today's colles
 
+        # The format you want your message to have (see documentation)
+        # Default : {matiere} {date} {heure} {salle} {colleur}
+        # NTFY_FORMAT=
+
         # Set to true if using a self signed certificate for your instance
         # Default : False
         # - SELF_SIGNED_CERTIFICATE=true
@@ -944,6 +970,28 @@
 </ul>
 <hr />
 <h2 id="optional-variables">Optional variables</h2>
+<h3 id="ntfy_format">NTFY_FORMAT</h3>
+<p>You can change the format of your notification with a format string.</p>
+<ul>
+<li>Variables:</li>
+</ul>
+<p>Variables need to be inside {}, you can also use any text between these variables that will be shown inside you notification.</p>
+<ul>
+<li>
+<p>Available variables</p>
+<ol>
+<li>matiere</li>
+<li>date</li>
+<li>heure</li>
+<li>salle</li>
+<li>colleur</li>
+</ol>
+</li>
+<li>
+<p>Default : {matiere} {date} {heure} {salle} {colleur}</p>
+</li>
+</ul>
+<hr />
 <h3 id="ntfy_server"><code>NTFY_SERVER</code></h3>
 <p>URL of your ntfy instance.</p>
 <ul>
