@@ -36,6 +36,10 @@ services:
         - NTFY_TOPIC=YourTopicName
         - NTFY_TITLE=Today's colles
 
+        # The format you want your message to have (see documentation)
+        # Default : {matiere} {date} {heure} {salle} {colleur}
+        # NTFY_FORMAT=
+
         # Set to true if using a self signed certificate for your instance
         # Default : False
         # - SELF_SIGNED_CERTIFICATE=true
@@ -138,6 +142,29 @@ The title used for notifications.
 ***
 
 ## Optional variables
+
+
+### NTFY_FORMAT
+        
+You can change the format of your notification with a format string.
+
+
+- Variables:
+
+Variables need to be inside {}, you can also use any text between these variables that will be shown inside you notification.
+
+- Available variables
+
+    1. matiere
+    2. date
+    3. heure
+    4. salle
+    5. colleur
+ 
+
+- Default : {matiere} {date} {heure} {salle} {colleur}
+
+---
 
 ### `NTFY_SERVER`
 
