@@ -17,8 +17,9 @@ def parse_date_string(datestring):
     temp = datetime.datetime.strptime(
         datestring.split()[2], "%B"
     )  # to get only the month data
-    if temp.month < now.month:
-        year += 1
+    if now.month > 7:
+        if temp.month < 7:
+            year += 1
     return datetime.datetime.strptime(datestring + " " + str(year), "%A %d %B %Hh%M %Y")
 
 
@@ -42,3 +43,6 @@ def get_next_colles():
     return out
 
 
+if __name__ == '__main__':
+    next = get_next_colles()
+    print(next)
