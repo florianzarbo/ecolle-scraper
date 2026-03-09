@@ -2,8 +2,10 @@ import notif
 import fetch
 import parse
 
-
-fetch.fetch_and_save()
+try:
+    fetch.fetch_and_save()
+except:
+    pass
 
 next = parse.get_next_colles()
 for colle in next[::-1]:
