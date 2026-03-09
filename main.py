@@ -3,8 +3,12 @@ import fetch
 import parse
 
 try:
-    fetch.fetch_and_save()
+    open("output/agenda.csv")
 except:
+    try:
+        fetch.fetch_and_save()
+    except:
+        pass
     pass
 
 next = parse.get_next_colles()
