@@ -85,5 +85,13 @@ uv tool run --from mkdocs-material mkdocs gh-deploy --ignore-version
 version that produced it, and it refuses to deploy with an older one.
 
 `gh-pages` is rewritten on every deploy, so it always needs a force push; the
-GitHub mirror picks the branch up automatically. A workflow also runs the tests
-on every push, see `.github/workflows/`.
+GitHub mirror picks the branch up automatically.
+
+The deploy is deliberately **not** part of CI. GitHub refuses to publish Pages
+from a branch when the push comes from a workflow's `GITHUB_TOKEN` (the
+`github-pages` environment protects the branch), which is why the workflow only
+checks that the documentation *builds*. Run `mkdocs gh-deploy` from a machine
+with push access to publish.
+
+`.github/workflows/tests.yml` runs the test suite, compiles every module and
+builds the documentation strictly, on every push and pull request.

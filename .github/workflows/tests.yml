@@ -28,28 +28,12 @@ jobs:
         run: uv run python -m unittest discover -s tests -v
 
       - name: Check that every module compiles
-        run: uv run python -m compileall -q config.py dates.py fetch.py main.py notif.py parse.py
+        run: >-
+          uv run python -m compileall -q
+          config.py dates.py fetch.py main.py notif.py parse.py
 
-  docs:
-    # Publish the documentation only from the default branch, never from a fork
-    # or a pull request.
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Build the documentation
+      - name: Check that the documentation builds
+        # The site itself is published with "mkdocs gh-deploy" from a machine
+        # with push access; this only makes sure the sources are valid, so a
+        # broken page cannot reach the published site.
         run: uv tool run --from mkdocs-material mkdocs build --strict
-
-      - name: Publish to GitHub Pages
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          uv tool run --from mkdocs-material mkdocs gh-deploy --ignore-version \
-            --message "Deployed ${{ github.sha }} from GitHub Actions"
