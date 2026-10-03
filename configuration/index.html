@@ -517,6 +517,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NTFY_FORMAT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields-from-the-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields from the CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#derived-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Derived fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -823,6 +851,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NTFY_FORMAT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields-from-the-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields from the CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#derived-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Derived fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1087,48 +1143,126 @@ COLLES_CSV_PATH=/app/input/colles.csv
 <h2 id="optional-variables">Optional variables</h2>
 <h3 id="ntfy_format"><code>NTFY_FORMAT</code></h3>
 <p>You can change the format of your notification with a format string.</p>
+<p>Fields need to be inside <code>{}</code>, and you can put any text between them. Dates are written in French (<code>16 janvier</code>) and times the French way (<code>15h00</code>), no matter the locale of the machine running the container.</p>
+<h4 id="fields-from-the-csv">Fields from the CSV</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Example</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matiere</code></td>
+<td><code>Mathématiques</code></td>
+<td>Subject</td>
+</tr>
+<tr>
+<td><code>colleur</code></td>
+<td><code>M Jouve</code></td>
+<td>Who examines you</td>
+</tr>
+<tr>
+<td><code>salle</code></td>
+<td><code>P103</code></td>
+<td>Room</td>
+</tr>
+<tr>
+<td><code>fin</code></td>
+<td><code>16:00</code></td>
+<td>End time, may be empty</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>2027-01-16</code></td>
+<td>Raw ISO date, for technical use</td>
+</tr>
+<tr>
+<td><code>heure</code></td>
+<td><code>15:00</code></td>
+<td>Raw start time</td>
+</tr>
+<tr>
+<td><code>date_time</code></td>
+<td><code>2027-01-16 15:00</code></td>
+<td>Raw date and start time</td>
+</tr>
+</tbody>
+</table>
+<h4 id="derived-fields">Derived fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Example</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jour</code></td>
+<td><code>samedi</code></td>
+<td>Computed from the date, never from the export</td>
+</tr>
+<tr>
+<td><code>date_courte</code></td>
+<td><code>16 janvier</code></td>
+<td>Day and month</td>
+</tr>
+<tr>
+<td><code>date_longue</code></td>
+<td><code>samedi 16 janvier</code></td>
+<td>Day name, day and month</td>
+</tr>
+<tr>
+<td><code>date_annee</code></td>
+<td><code>16 janvier 2027</code></td>
+<td>Day, month and year</td>
+</tr>
+<tr>
+<td><code>heure_debut</code></td>
+<td><code>15h00</code></td>
+<td>Start time</td>
+</tr>
+<tr>
+<td><code>heure_fin</code></td>
+<td><code>15h00 - 16h00</code></td>
+<td>Start and end time, or just <code>15h00</code></td>
+</tr>
+<tr>
+<td><code>date_heure</code></td>
+<td><code>16 janvier 15h00</code></td>
+<td>Day, month and start time</td>
+</tr>
+</tbody>
+</table>
+<p>Because <code>jour</code> is derived from the date, a wrong or missing <code>Jour</code> column in the CSV cannot make the notification lie about the day.</p>
 <ul>
-<li>Fields need to be inside <code>{}</code>, and you can put any text between them.</li>
 <li>
-<p>Available fields, from the CSV:</p>
-<ol>
-<li><code>matiere</code></li>
-<li><code>date</code></li>
-<li><code>heure</code> (start time)</li>
-<li><code>fin</code> (end time, may be empty)</li>
-<li><code>salle</code></li>
-<li><code>colleur</code></li>
-<li><code>jour</code></li>
-<li><code>date_time</code> (date and start time together, e.g. <code>2026-09-24 17:00</code>)</li>
-</ol>
-</li>
-<li>
-<p>Derived field:</p>
-<ol>
-<li><code>heure_fin</code> — <code>17:00 - 18:00</code>, or just <code>17:00</code> when the end time is not
-   known. This is what the default format uses.</li>
-</ol>
-</li>
-<li>
-<p>Default : <code>{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})</code>, which
-  renders as:</p>
-<pre><code>jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)
+<p>Default : <code>{jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})</code>, which renders as:</p>
+<pre><code>samedi 16 janvier 15h00 P103 - Mathématiques (M Jouve)
 </code></pre>
 </li>
 <li>
-<p>Example:</p>
-<pre><code>NTFY_FORMAT={matiere} le {date} à {heure}, salle {salle} avec {colleur}
+<p>Examples:</p>
+<pre><code>NTFY_FORMAT={matiere} {jour} {date_courte} {heure_debut} {salle}
+NTFY_FORMAT={date_longue} {heure_fin} - {matiere} en {salle} ({colleur})
+NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </code></pre>
 </li>
 <li>
 <p>Fallback syntax: <code>{field|text}</code> renders <code>text</code> when <code>field</code> is empty, which is
-  useful for the optional <code>Jour</code> and <code>Fin</code> columns:</p>
+  useful for the optional <code>Fin</code> column:</p>
 <pre><code>NTFY_FORMAT={matiere} {fin|fin inconnue} ({jour|jour inconnu})
 </code></pre>
 </li>
-<li>
-<p>Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up.</p>
-</li>
+</ul>
+<p>which renders as <code>Mathématiques fin inconnue (samedi)</code> when the export has no
+  end time.</p>
+<ul>
+<li>Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up. If a row has no readable date at all, the date fields render empty instead of stopping the run.</li>
 </ul>
 <hr />
 <h3 id="agenda_csv_path"><code>AGENDA_CSV_PATH</code></h3>
@@ -1218,7 +1352,7 @@ NTFY_TITLE=Today's colles
 
 # Optional:
 # NTFY_SERVER=https://ntfy.example.org
-# NTFY_FORMAT={jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})
+# NTFY_FORMAT={jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})
 # AGENDA_CSV_PATH=output/agenda.csv
 </code></pre>
 <h2 id="troubleshooting">Troubleshooting</h2>
