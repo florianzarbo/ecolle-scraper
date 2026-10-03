@@ -1088,14 +1088,14 @@ COLLES_CSV_PATH=/app/input/colles.csv
 <h3 id="ntfy_format"><code>NTFY_FORMAT</code></h3>
 <p>You can change the format of your notification with a format string.</p>
 <ul>
-<li>Variables need to be inside <code>{}</code>, and you can put any text between them.</li>
+<li>Fields need to be inside <code>{}</code>, and you can put any text between them.</li>
 <li>
-<p>Available variables:</p>
+<p>Available fields, from the CSV:</p>
 <ol>
 <li><code>matiere</code></li>
 <li><code>date</code></li>
-<li><code>heure</code></li>
-<li><code>fin</code></li>
+<li><code>heure</code> (start time)</li>
+<li><code>fin</code> (end time, may be empty)</li>
 <li><code>salle</code></li>
 <li><code>colleur</code></li>
 <li><code>jour</code></li>
@@ -1103,7 +1103,17 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </ol>
 </li>
 <li>
-<p>Default : <code>{matiere} {date} {heure} {salle} {colleur}</code></p>
+<p>Derived field:</p>
+<ol>
+<li><code>heure_fin</code> — <code>17:00 - 18:00</code>, or just <code>17:00</code> when the end time is not
+   known. This is what the default format uses.</li>
+</ol>
+</li>
+<li>
+<p>Default : <code>{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})</code>, which
+  renders as:</p>
+<pre><code>jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)
+</code></pre>
 </li>
 <li>
 <p>Example:</p>
@@ -1111,7 +1121,13 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </code></pre>
 </li>
 <li>
-<p>Notes: an unknown field name stops the run with a message listing the available fields.</p>
+<p>Fallback syntax: <code>{field|text}</code> renders <code>text</code> when <code>field</code> is empty, which is
+  useful for the optional <code>Jour</code> and <code>Fin</code> columns:</p>
+<pre><code>NTFY_FORMAT={matiere} {fin|fin inconnue} ({jour|jour inconnu})
+</code></pre>
+</li>
+<li>
+<p>Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up.</p>
 </li>
 </ul>
 <hr />
@@ -1202,7 +1218,7 @@ NTFY_TITLE=Today's colles
 
 # Optional:
 # NTFY_SERVER=https://ntfy.example.org
-# NTFY_FORMAT={matiere} {date} {heure} {salle} {colleur}
+# NTFY_FORMAT={jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})
 # AGENDA_CSV_PATH=output/agenda.csv
 </code></pre>
 <h2 id="troubleshooting">Troubleshooting</h2>
