@@ -342,39 +342,73 @@ class TestMessageFormat(unittest.TestCase):
 
         self.notif = notif
 
-    def test_default_format_mentions_the_day_and_the_times(self):
+    def test_default_format_reads_like_a_french_sentence(self):
         message = self.notif.format_message(COLLE)
         self.assertEqual(
-            message, "jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)"
+            message, "jeudi 24 septembre 17h00 L037 - Anglais (Mme Hatri)"
         )
 
-    def test_default_has_no_dangling_separator_without_an_end_time(self):
+    def test_default_without_an_end_time(self):
         message = self.notif.format_message(dict(COLLE, fin=""))
-        self.assertEqual(
-            message, "jeudi 2026-09-24 17:00 - Anglais en L037 (Mme Hatri)"
-        )
-        self.assertNotIn("- -", message)
-        self.assertFalse(message.endswith("-"))
+        self.assertEqual(message, "jeudi 24 septembre 17h00 L037 - Anglais (Mme Hatri)")
 
-    def test_default_without_a_day_name(self):
-        message = self.notif.format_message(dict(COLLE, jour=""))
-        self.assertEqual(
-            message, "2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)"
-        )
+    def test_jour_is_derived_from_the_date_not_the_csv_column(self):
+        # A wrong or missing "Jour" column must not change the output.
+        for jour in ("jeudi", "", "lundi", "2026"):
+            message = self.notif.format_message(
+                dict(COLLE, jour=jour), "{jour} {date_courte}"
+            )
+            self.assertEqual(message, "jeudi 24 septembre")
 
-    def test_heure_fin_variants(self):
-        derived = self.notif.derived_fields
-        self.assertEqual(derived(COLLE)["heure_fin"], "17:00 - 18:00")
-        self.assertEqual(derived(dict(COLLE, fin=""))["heure_fin"], "17:00")
+    def test_french_date_fields(self):
+        derived = self.notif.derived_fields(COLLE)
+        self.assertEqual(derived["date_courte"], "24 septembre")
+        self.assertEqual(derived["date_longue"], "jeudi 24 septembre")
+        self.assertEqual(derived["date_annee"], "24 septembre 2026")
+        self.assertEqual(derived["date_heure"], "24 septembre 17h00")
+
+    def test_french_time_fields(self):
+        derived = self.notif.derived_fields(COLLE)
+        self.assertEqual(derived["heure_debut"], "17h00")
+        self.assertEqual(derived["heure_fin"], "17h00 - 18h00")
+        self.assertEqual(derived["heure_fin"], "17h00 - 18h00")
+
+    def test_every_month_has_a_french_name(self):
+        expected = [
+            "janvier", "février", "mars", "avril", "mai", "juin",
+            "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+        ]
+        for month, name in enumerate(expected, start=1):
+            message = self.notif.format_message(
+                {**COLLE, "date": f"2027-{month:02d}-16",
+                 "date_time": f"2027-{month:02d}-16 17:00"},
+                "{date_annee}",
+            )
+            self.assertEqual(message, f"16 {name} 2027")
+
+    def test_the_day_name_matches_the_real_weekday(self):
+        # 2027-01-16 is a Saturday, whatever the CSV says.
+        message = self.notif.format_message(
+            {**COLLE, "date": "2027-01-16", "date_time": "2027-01-16 15:00"},
+            "{jour} {date_longue}",
+        )
+        self.assertEqual(message, "samedi samedi 16 janvier")
+
+    def test_no_date_degrades_gracefully(self):
+        message = self.notif.format_message(
+            {"matiere": "Maths"}, "{jour} {date_courte} {heure_debut} {matiere}"
+        )
+        self.assertEqual(message, "Maths")
 
     def test_fallback_syntax_is_used_when_a_field_is_empty(self):
-        template = "{matiere} {fin|fin inconnue} {jour|?}"
+        template = "{matiere} {fin|fin inconnue} {date_courte}"
         self.assertEqual(
-            self.notif.format_message(COLLE, template), "Anglais 18:00 jeudi"
+            self.notif.format_message(COLLE, template),
+            "Anglais 18:00 24 septembre",
         )
         self.assertEqual(
             self.notif.format_message(dict(COLLE, fin=""), template),
-            "Anglais fin inconnue jeudi",
+            "Anglais fin inconnue 24 septembre",
         )
 
     def test_fallback_syntax_reports_unknown_fields(self):
@@ -382,11 +416,19 @@ class TestMessageFormat(unittest.TestCase):
             self.notif.format_message(COLLE, "{nope|x}")
         self.assertIn("nope", str(caught.exception))
 
-    def test_the_old_default_template_still_works(self):
+    def test_technical_fields_still_available(self):
         message = self.notif.format_message(
             COLLE, "{matiere} {date} {heure} {salle} {colleur}"
         )
         self.assertEqual(message, "Anglais 2026-09-24 17:00 L037 Mme Hatri")
+
+    def test_previous_default_template_still_works(self):
+        message = self.notif.format_message(
+            COLLE, "{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})"
+        )
+        self.assertEqual(
+            message, "jeudi 2026-09-24 17h00 - 18h00 - Anglais en L037 (Mme Hatri)"
+        )
 
     def test_whitespace_is_collapsed(self):
         message = self.notif.format_message(COLLE, "  {matiere}   {salle}  ")

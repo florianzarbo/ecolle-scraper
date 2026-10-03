@@ -130,40 +130,54 @@ Set to `true` to never contact the ecolle website.
 
 You can change the format of your notification with a format string.
 
-- Fields need to be inside `{}`, and you can put any text between them.
-- Available fields, from the CSV:
+Fields need to be inside `{}`, and you can put any text between them. Dates are written in French (`16 janvier`) and times the French way (`15h00`), no matter the locale of the machine running the container.
 
-    1. `matiere`
-    2. `date`
-    3. `heure` (start time)
-    4. `fin` (end time, may be empty)
-    5. `salle`
-    6. `colleur`
-    7. `jour`
-    8. `date_time` (date and start time together, e.g. `2026-09-24 17:00`)
+#### Fields from the CSV
 
-- Derived field:
+| Field       | Example              | Notes                                    |
+| ----------- | -------------------- | ---------------------------------------- |
+| `matiere`   | `Mathématiques`      | Subject                                  |
+| `colleur`   | `M Jouve`            | Who examines you                         |
+| `salle`     | `P103`               | Room                                     |
+| `fin`       | `16:00`              | End time, may be empty                   |
+| `date`      | `2027-01-16`         | Raw ISO date, for technical use          |
+| `heure`     | `15:00`              | Raw start time                           |
+| `date_time` | `2027-01-16 15:00`   | Raw date and start time                  |
 
-    1. `heure_fin` — `17:00 - 18:00`, or just `17:00` when the end time is not
-       known. This is what the default format uses.
+#### Derived fields
 
-- Default : `{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})`, which
-  renders as:
+| Field         | Example                | Notes                                          |
+| ------------- | ---------------------- | ---------------------------------------------- |
+| `jour`        | `samedi`               | Computed from the date, never from the export  |
+| `date_courte` | `16 janvier`           | Day and month                                  |
+| `date_longue` | `samedi 16 janvier`    | Day name, day and month                        |
+| `date_annee`  | `16 janvier 2027`      | Day, month and year                            |
+| `heure_debut` | `15h00`                | Start time                                     |
+| `heure_fin`   | `15h00 - 16h00`        | Start and end time, or just `15h00`            |
+| `date_heure`  | `16 janvier 15h00`     | Day, month and start time                      |
 
-        jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)
+Because `jour` is derived from the date, a wrong or missing `Jour` column in the CSV cannot make the notification lie about the day.
 
-- Example:
+- Default : `{jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})`, which renders as:
 
-        NTFY_FORMAT={matiere} le {date} à {heure}, salle {salle} avec {colleur}
+        samedi 16 janvier 15h00 P103 - Mathématiques (M Jouve)
 
+- Examples:
+
+        NTFY_FORMAT={matiere} {jour} {date_courte} {heure_debut} {salle}
+        NTFY_FORMAT={date_longue} {heure_fin} - {matiere} en {salle} ({colleur})
+        NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 
 - Fallback syntax: `{field|text}` renders `text` when `field` is empty, which is
-  useful for the optional `Jour` and `Fin` columns:
+  useful for the optional `Fin` column:
 
         NTFY_FORMAT={matiere} {fin|fin inconnue} ({jour|jour inconnu})
 
+  which renders as `Mathématiques fin inconnue (samedi)` when the export has no
+  end time.
 
-- Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up.
+
+- Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up. If a row has no readable date at all, the date fields render empty instead of stopping the run.
 
 ---
 
@@ -264,7 +278,7 @@ NTFY_TITLE=Today's colles
 
 # Optional:
 # NTFY_SERVER=https://ntfy.example.org
-# NTFY_FORMAT={jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})
+# NTFY_FORMAT={jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})
 # AGENDA_CSV_PATH=output/agenda.csv
 ```
 

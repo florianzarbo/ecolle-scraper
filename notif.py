@@ -1,5 +1,6 @@
 """ntfy notification helpers."""
 
+import datetime
 import os
 import re
 
@@ -14,9 +15,9 @@ if load_dotenv is not None:
     load_dotenv()
 
 #: Default notification body, see docs/configuration.md.
-#: ``{heure_fin}`` is the start time, followed by the end time when known.
+#: Renders as "vendredi 16 janvier 15h00 P103 - Mathématiques (M Jouve)".
 DEFAULT_NTFY_FORMAT = (
-    "{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})"
+    "{jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})"
 )
 
 NTFY_TOPIC = os.getenv("NTFY_TOPIC", "")
@@ -33,16 +34,93 @@ ROOT_CA_PATH = os.getenv("ROOT_CA_PATH", "")  # e.g., "/path/to/rootCA.pem"
 #: ``{field|fallback}`` renders the field, or the fallback text when it is empty.
 FALLBACK_SYNTAX = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\|([^{}]*)\}")
 
+#: French names, hardcoded so the output does not depend on the host locale.
+#: Without fr_FR, ``strftime("%B")`` would silently return "January".
+MONTHS = (
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+)
+WEEKDAYS = (
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche",
+)
+
+
+def parse_row_date(colle: dict):
+    """Return the ``datetime`` of a row, or ``None`` when it is unusable."""
+    raw = (colle.get("date_time") or "").strip()
+    if not raw:
+        raw = " ".join(
+            part for part in (colle.get("date"), colle.get("heure")) if part
+        ).strip()
+    if not raw:
+        return None
+    try:
+        return datetime.datetime.fromisoformat(raw)
+    except ValueError:
+        pass
+    try:  # legacy scraped format, e.g. "jeudi 24 septembre 17h00"
+        return datetime.datetime.strptime(raw, "%A %d %B %Hh%M")
+    except ValueError:
+        return None
+
+
+def french_date(when: datetime.datetime, with_year: bool = False) -> str:
+    """Format a date in French: ``16 janvier``, or ``16 janvier 2027``."""
+    text = f"{when.day} {MONTHS[when.month - 1]}"
+    return f"{text} {when.year}" if with_year else text
+
+
+def french_time(value: str) -> str:
+    """Write a time the French way: ``15:00`` becomes ``15h00``."""
+    value = (value or "").strip()
+    return value.replace(":", "h") if value else ""
+
 
 def derived_fields(colle: dict) -> dict:
     """Add the convenience fields that templates can use."""
     values = dict(colle)
     heure = (colle.get("heure") or "").strip()
     fin = (colle.get("fin") or "").strip()
-    if heure and fin:
-        values["heure_fin"] = f"{heure} - {fin}"
-    else:
-        values["heure_fin"] = heure or fin
+    values["heure_debut"] = french_time(heure)
+    values["heure_fin"] = (
+        f"{french_time(heure)} - {french_time(fin)}"
+        if heure and fin
+        else french_time(heure) or french_time(fin)
+    )
+
+    when = parse_row_date(colle)
+    if when is None:
+        # Nothing to compute from, leave the extras empty.
+        values.setdefault("jour", (colle.get("jour") or "").strip())
+        values["date_courte"] = ""
+        values["date_longue"] = ""
+        values["date_annee"] = ""
+        values["date_heure"] = ""
+        return values
+
+    # The day name is derived from the date, so it cannot go out of sync with
+    # the optional "Jour" column of the export.
+    values["jour"] = WEEKDAYS[when.weekday()]
+    values["date_courte"] = french_date(when)
+    values["date_longue"] = f"{WEEKDAYS[when.weekday()]} {french_date(when)}"
+    values["date_annee"] = french_date(when, with_year=True)
+    values["date_heure"] = f"{french_date(when)} {french_time(heure)}".strip()
     return values
 
 
