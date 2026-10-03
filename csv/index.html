@@ -405,6 +405,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#fetching-from-ecolle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetching from ecolle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-on-an-error" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -549,6 +560,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#fetching-from-ecolle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetching from ecolle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-on-an-error" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -593,13 +615,30 @@
 <h1 id="csv-format">CSV format</h1>
 <p>Starting with version 2.0.0, the schedule is read from a CSV file rather than fetched from an ecolle instance. This page describes the expected file.</p>
 <h2 id="where-to-put-the-file">Where to put the file</h2>
-<p>By default the script reads:</p>
+<p>By default the script reads, <strong>inside the container</strong>:</p>
 <pre><code>input/colles.csv
 </code></pre>
-<p>relative to the working directory. Inside the container that is <code>/app/input/colles.csv</code>, so with the provided <code>docker-compose.yml</code> you only have to drop your file in the <code>input/</code> folder next to <code>docker-compose.yml</code>.</p>
-<p>To use another location, set <a href="../configuration/#colles_csv_path"><code>COLLES_CSV_PATH</code></a>:</p>
-<pre><code>COLLES_CSV_PATH=/app/data/my-colles.csv
+<p>The script runs with <code>/app</code> as its working directory, so that is <code>/app/input/colles.csv</code>. The provided <code>docker-compose.yml</code> mounts the <code>input/</code> folder that sits next to it onto <code>/app/input</code>:</p>
+<pre><code class="language-yaml">volumes:
+  - ./input:/app/input:ro
 </code></pre>
+<p>So on your server you only have to create an <code>input</code> folder next to <code>docker-compose.yml</code> and drop your export in it:</p>
+<pre><code>my-ecolle/
+├── docker-compose.yml
+├── .env
+└── input/
+    └── colles.csv      &lt;- your export
+</code></pre>
+<p><code>COLLES_CSV_PATH</code> is a path <em>inside the container</em>. These two are equivalent and both work:</p>
+<pre><code>COLLES_CSV_PATH=input/colles.csv
+COLLES_CSV_PATH=/app/input/colles.csv
+</code></pre>
+<p>If you want a single file elsewhere, mount it explicitly instead:</p>
+<pre><code class="language-yaml">volumes:
+  - /srv/colles/colles.csv:/app/data/colles.csv:ro
+</code></pre>
+<p>with <code>COLLES_CSV_PATH=/app/data/colles.csv</code>.</p>
+<p>The file must be world-readable (<code>chmod a+r input/colles.csv</code>): a file that is only readable by its owner is not always readable inside the container.</p>
 <h2 id="expected-content">Expected content</h2>
 <p>The file must be comma separated and start with a header row:</p>
 <pre><code class="language-csv">Date,Matière,Colleur,Jour,Salle,Début,Fin
@@ -668,6 +707,11 @@
 <li>unsupported header spellings are reported in the error message</li>
 </ul>
 <p>Rows with an unreadable date or time are skipped with a warning, and the rest of the file is still used. A row of data may not span several lines.</p>
+<h2 id="fetching-from-ecolle">Fetching from ecolle</h2>
+<p>By default, when the CSV file is missing the script falls back to logging in to your ecolle instance, as it did before 2.0.0. Since that is no longer possible for most people, the fallback can be switched off:</p>
+<pre><code>DISABLE_ECALLE_FETCH=true
+</code></pre>
+<p>The CSV file then becomes the only source. If it is missing, the run stops immediately with a message explaining what was looked for, instead of trying to reach ecolle. This is a good way to be sure the container is really using your file.</p>
 <h2 id="what-happens-on-an-error">What happens on an error</h2>
 <p>If the CSV file is missing, or cannot be used (wrong separator, missing required column, no usable row), the run stops with a clear message. When a previously normalised agenda is still present in <code>/app/output</code>, it is used instead so you keep receiving notifications; the exit code stays <code>0</code> only if a CSV or that cached agenda was usable.</p>
 <h2 id="sample-file">Sample file</h2>

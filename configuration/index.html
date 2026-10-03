@@ -480,6 +480,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#disable_ecalle_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DISABLE_ECALLE_FETCH
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -775,6 +786,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#disable_ecalle_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DISABLE_ECALLE_FETCH
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1022,16 +1044,42 @@
 </ul>
 <hr />
 <h3 id="colles_csv_path"><code>COLLES_CSV_PATH</code></h3>
-<p>Path of the CSV export to read, relative to the working directory (or absolute).</p>
+<p>Path of the CSV export to read, <strong>inside the container</strong>.</p>
 <ul>
 <li>Default: <code>input/colles.csv</code></li>
 <li>
-<p>Example:</p>
-<pre><code>COLLES_CSV_PATH=/app/data/colles.csv
+<p>Examples:</p>
+<pre><code>COLLES_CSV_PATH=input/colles.csv
+COLLES_CSV_PATH=/app/input/colles.csv
 </code></pre>
 </li>
 <li>
-<p>Notes: The file must be readable by the container. With the provided <code>docker-compose.yml</code>, the <code>input/</code> folder of the host is mounted read-only at <code>/app/input</code>.</p>
+<p>Notes:</p>
+<ul>
+<li>This is a container path, not a path on your machine. With the provided <code>docker-compose.yml</code>, the <code>input/</code> folder of the host is mounted read-only at <code>/app/input</code>, so <code>./input/colles.csv</code> on your machine is <code>input/colles.csv</code> (or <code>/app/input/colles.csv</code>) here.</li>
+<li>The script runs with <code>/app</code> as its working directory, so relative paths resolve against <code>/app</code>.</li>
+<li>The file must be world-readable (<code>chmod a+r</code>): if it is only readable by its owner, the container may not be able to read it.</li>
+<li>If the file is not found, the message lists the CSV files that <em>are</em> present at that location.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="disable_ecalle_fetch"><code>DISABLE_ECALLE_FETCH</code></h3>
+<p>Set to <code>true</code> to never contact the ecolle website.</p>
+<ul>
+<li>Default: <code>false</code></li>
+<li>
+<p>Example:</p>
+<pre><code>DISABLE_ECALLE_FETCH=true
+</code></pre>
+</li>
+<li>
+<p>Notes:</p>
+<ul>
+<li>With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.</li>
+<li>Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if <code>BASE_URL</code>, <code>COLLES_USERNAME</code> and <code>COLLES_PASSWORD</code> are set).</li>
+<li><code>DISABLE_SCRAPER_FALLBACK</code> and <code>NO_SCRAPE</code> are accepted as alternative names.</li>
+</ul>
 </li>
 </ul>
 <hr />
@@ -1108,7 +1156,7 @@
 </ul>
 <hr />
 <h2 id="scraper-fallback-optional">Scraper fallback (optional)</h2>
-<p>When no CSV file is found at <code>COLLES_CSV_PATH</code>, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case.</p>
+<p>When no CSV file is found at <code>COLLES_CSV_PATH</code>, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with <code>DISABLE_ECALLE_FETCH</code> (see above).</p>
 <h3 id="base_url"><code>BASE_URL</code></h3>
 <p>Base URL of your institution's e-colle website.</p>
 <ul>
@@ -1145,6 +1193,7 @@
 <hr />
 <h2 id="example-env">Example <code>.env</code></h2>
 <pre><code class="language-env">COLLES_CSV_PATH=input/colles.csv
+DISABLE_ECALLE_FETCH=true
 NUMBER_OF_COLLES_TO_SHOW=2
 
 NTFY_TOPIC=mp2i-9f3a2c1d
@@ -1157,6 +1206,9 @@ NTFY_TITLE=Today's colles
 </code></pre>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <ul>
+<li><strong><code>CSV file not found</code></strong>: the message lists the CSV files present at that location and reminds you that <code>COLLES_CSV_PATH</code> is a <em>container</em> path. With the provided compose file, <code>./input/colles.csv</code> on your machine is <code>input/colles.csv</code> inside the container.</li>
+<li><strong>The container ignores the CSV and tries to log in to ecolle</strong>: you are running the pre-2.0.0 image. <code>docker compose pull</code> (or <code>docker compose build --pull</code>) and check <code>docker run --rm &lt;image&gt; --help</code>-free output starts with <code>[*] Reading CSV:</code>.</li>
+<li><strong><code>exists but cannot be read</code></strong>: the file is not world-readable, run <code>chmod a+r input/colles.csv</code>.</li>
 <li>No notifications: Verify <code>NTFY_TOPIC</code> (and <code>NTFY_SERVER</code> if you set it).</li>
 <li><code>missing column(s) …</code>: the CSV is not the expected one, check <a href="../csv/">CSV format</a>. Note that a semicolon-separated export is not accepted.</li>
 <li><code>no usable row found</code>: check that the dates look like <code>2026-09-24</code> and the times like <code>17:00</code>.</li>
