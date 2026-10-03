@@ -89,15 +89,37 @@ How many upcoming colles to send, starting from the soonest one.
 
 ### `COLLES_CSV_PATH`
 
-Path of the CSV export to read, relative to the working directory (or absolute).
+Path of the CSV export to read, **inside the container**.
 
 - Default: `input/colles.csv`
+- Examples:
+
+        COLLES_CSV_PATH=input/colles.csv
+        COLLES_CSV_PATH=/app/input/colles.csv
+
+
+- Notes:
+    - This is a container path, not a path on your machine. With the provided `docker-compose.yml`, the `input/` folder of the host is mounted read-only at `/app/input`, so `./input/colles.csv` on your machine is `input/colles.csv` (or `/app/input/colles.csv`) here.
+    - The script runs with `/app` as its working directory, so relative paths resolve against `/app`.
+    - The file must be world-readable (`chmod a+r`): if it is only readable by its owner, the container may not be able to read it.
+    - If the file is not found, the message lists the CSV files that *are* present at that location.
+
+***
+
+### `DISABLE_ECALLE_FETCH`
+
+Set to `true` to never contact the ecolle website.
+
+- Default: `false`
 - Example:
 
-        COLLES_CSV_PATH=/app/data/colles.csv
+        DISABLE_ECALLE_FETCH=true
 
 
-- Notes: The file must be readable by the container. With the provided `docker-compose.yml`, the `input/` folder of the host is mounted read-only at `/app/input`.
+- Notes:
+    - With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.
+    - Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if `BASE_URL`, `COLLES_USERNAME` and `COLLES_PASSWORD` are set).
+    - `DISABLE_SCRAPER_FALLBACK` and `NO_SCRAPE` are accepted as alternative names.
 
 ***
 
@@ -179,7 +201,7 @@ Path to the Root CA file (PEM) that signed your TLS certificate.
 
 ## Scraper fallback (optional)
 
-When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case.
+When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with `DISABLE_ECALLE_FETCH` (see above).
 
 ### `BASE_URL`
 
@@ -219,6 +241,7 @@ Your e-colle password (used to authenticate).
 
 ```env
 COLLES_CSV_PATH=input/colles.csv
+DISABLE_ECALLE_FETCH=true
 NUMBER_OF_COLLES_TO_SHOW=2
 
 NTFY_TOPIC=mp2i-9f3a2c1d
@@ -232,6 +255,9 @@ NTFY_TITLE=Today's colles
 
 ## Troubleshooting
 
+- **`CSV file not found`**: the message lists the CSV files present at that location and reminds you that `COLLES_CSV_PATH` is a *container* path. With the provided compose file, `./input/colles.csv` on your machine is `input/colles.csv` inside the container.
+- **The container ignores the CSV and tries to log in to ecolle**: you are running the pre-2.0.0 image. `docker compose pull` (or `docker compose build --pull`) and check `docker run --rm <image> --help`-free output starts with `[*] Reading CSV:`.
+- **`exists but cannot be read`**: the file is not world-readable, run `chmod a+r input/colles.csv`.
 - No notifications: Verify `NTFY_TOPIC` (and `NTFY_SERVER` if you set it).
 - `missing column(s) …`: the CSV is not the expected one, check [CSV format](csv.md). Note that a semicolon-separated export is not accepted.
 - `no usable row found`: check that the dates look like `2026-09-24` and the times like `17:00`.

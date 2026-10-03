@@ -13,7 +13,8 @@ extra whitespace, extra columns and a BOM are all tolerated. The rows are
 normalised into ``output/agenda.csv``, which is the file :mod:`parse` reads.
 
 If the CSV file cannot be found, the legacy HTML scraper is used as a fallback,
-so an existing ecolle instance still works.
+so an existing ecolle instance still works. Set ``DISABLE_ECALLE_FETCH=true`` to
+turn that fallback off and use the CSV file as the only source.
 """
 
 import csv
@@ -106,6 +107,33 @@ def setting(name: str, default: str = "") -> str:
     return value if value not in (None, "") else default
 
 
+def setting_any(names, default: str = "") -> str:
+    """Return the first of ``names`` that is set."""
+    for name in names:
+        value = setting(name)
+        if value:
+            return value
+    return default
+
+
+def is_true(value: str) -> bool:
+    """Interpret a human-written boolean."""
+    return value.strip().lower() in ("1", "true", "yes", "on")
+
+
+#: Names accepted for "never scrape ecolle, the CSV is the only source".
+DISABLE_FETCH_NAMES = (
+    "DISABLE_ECALLE_FETCH",
+    "DISABLE_SCRAPER_FALLBACK",
+    "NO_SCRAPE",
+)
+
+
+def scraping_disabled() -> bool:
+    """Whether the ecolle website must never be contacted."""
+    return is_true(setting_any(DISABLE_FETCH_NAMES, "false"))
+
+
 def csv_path() -> str:
     """Path of the CSV export to read."""
     return setting("COLLES_CSV_PATH", DEFAULT_CSV_PATH)
@@ -160,6 +188,47 @@ def parse_time(raw: str) -> datetime.time:
 # --------------------------------------------------------------------------- #
 
 
+def describe_missing_csv(path: str) -> str:
+    """Build an actionable message for a CSV file that is not there."""
+    message = [
+        f"CSV file not found at {path!r} (working directory: {os.getcwd()!r}).",
+        f"Put your export at {os.path.join('input', 'colles.csv')} or point "
+        "COLLES_CSV_PATH at it.",
+    ]
+
+    directory = os.path.dirname(path) or "."
+    if os.path.isdir(path):
+        message.append(f"{path!r} is a directory, not a file.")
+        directory = path
+    elif not os.path.isdir(directory):
+        message.append(f"The directory {directory!r} does not exist.")
+
+    if os.path.isdir(directory):
+        try:
+            names = sorted(
+                name
+                for name in os.listdir(directory)
+                if name.lower().endswith((".csv", ".txt"))
+            )
+        except OSError as error:
+            message.append(f"Could not read {directory!r} ({error}).")
+        else:
+            if names:
+                message.append(f"CSV-like files in {directory!r}: " + ", ".join(names))
+            else:
+                message.append(f"There is no CSV file in {directory!r}.")
+
+    if os.environ.get("COLLES_CSV_PATH"):
+        message.append(
+            "COLLES_CSV_PATH is the path *inside* the container: with the "
+            "provided docker-compose.yml, ./input on the host is /app/input."
+        )
+    else:
+        message.append("COLLES_CSV_PATH is not set, using the default path.")
+
+    return " ".join(message)
+
+
 def read_colles_csv(path: str) -> list[dict]:
     """Read the ecolle CSV export and return normalised agenda rows.
 
@@ -173,7 +242,26 @@ def read_colles_csv(path: str) -> list[dict]:
         AgendaError: If the file is empty, malformed or has no usable row.
     """
     print(f"[*] Reading CSV: {path}")
-    with open(path, newline="", encoding="utf-8-sig") as csvfile:
+    try:
+        csvfile = open(path, newline="", encoding="utf-8-sig")
+    except PermissionError as error:
+        raise AgendaError(
+            f"{path} exists but cannot be read ({error}). The file is mounted "
+            "read-only, make sure it is world-readable (chmod a+r)."
+        ) from error
+    except IsADirectoryError as error:
+        raise AgendaError(
+            f"{path} is a directory, COLLES_CSV_PATH must point at the CSV file"
+        ) from error
+    except UnicodeDecodeError as error:
+        raise AgendaError(
+            f"{path} is not valid UTF-8 text ({error}). Export the CSV again as "
+            "UTF-8 or comma-separated values."
+        ) from error
+    except OSError as error:
+        raise AgendaError(f"{path} could not be opened ({error})") from error
+
+    with csvfile:
         reader = csv.DictReader(csvfile)
         if reader.fieldnames is None:
             raise AgendaError(f"{path} is empty")
@@ -398,15 +486,25 @@ def scrape_and_save() -> list[dict]:
 def fetch_and_save() -> list[dict]:
     """Populate the agenda from the CSV export, or scrape it as a fallback.
 
+    The scraper fallback is skipped entirely when scraping is disabled, see
+    :data:`DISABLE_FETCH_NAMES`.
+
     Returns:
         The normalised agenda rows written to ``output/agenda.csv``.
 
     Raises:
-        AgendaError: If the CSV file exists but cannot be used.
+        AgendaError: If no agenda could be built.
     """
     path = csv_path()
+
     if os.path.isfile(path):
         return save_agenda(read_colles_csv(path))
+
+    if scraping_disabled():
+        raise AgendaError(
+            describe_missing_csv(path)
+            + " Scraping ecolle is disabled, so nothing was fetched."
+        )
 
     print(f"[!] No CSV found at {path}, falling back to the ecolle website")
     try:

@@ -13,6 +13,8 @@ Since version 2.0.0 the colles come from a CSV file, so there is no need to log 
 4. Set at least `NTFY_TOPIC` in `.env`
 5. `docker compose run --rm app`
 
+`COLLES_CSV_PATH` is a path *inside* the container: the compose file mounts `./input` on `/app/input`, so `./input/colles.csv` beside `docker-compose.yml` becomes `input/colles.csv` in the container. Set `DISABLE_ECALLE_FETCH=true` to make the CSV the only source, so a missing file fails loudly instead of falling back to scraping ecolle.
+
 The container does a single run and exits, which makes it easy to schedule, for instance with cron:
 
 ```

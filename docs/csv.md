@@ -4,19 +4,46 @@ Starting with version 2.0.0, the schedule is read from a CSV file rather than fe
 
 ## Where to put the file
 
-By default the script reads:
+By default the script reads, **inside the container**:
 
 ```
 input/colles.csv
 ```
 
-relative to the working directory. Inside the container that is `/app/input/colles.csv`, so with the provided `docker-compose.yml` you only have to drop your file in the `input/` folder next to `docker-compose.yml`.
+The script runs with `/app` as its working directory, so that is `/app/input/colles.csv`. The provided `docker-compose.yml` mounts the `input/` folder that sits next to it onto `/app/input`:
 
-To use another location, set [`COLLES_CSV_PATH`](configuration.md#colles_csv_path):
+```yaml
+volumes:
+  - ./input:/app/input:ro
+```
+
+So on your server you only have to create an `input` folder next to `docker-compose.yml` and drop your export in it:
 
 ```
-COLLES_CSV_PATH=/app/data/my-colles.csv
+my-ecolle/
+├── docker-compose.yml
+├── .env
+└── input/
+    └── colles.csv      <- your export
 ```
+
+`COLLES_CSV_PATH` is a path *inside the container*. These two are equivalent and both work:
+
+```
+COLLES_CSV_PATH=input/colles.csv
+COLLES_CSV_PATH=/app/input/colles.csv
+```
+
+If you want a single file elsewhere, mount it explicitly instead:
+
+```yaml
+volumes:
+  - /srv/colles/colles.csv:/app/data/colles.csv:ro
+```
+
+with `COLLES_CSV_PATH=/app/data/colles.csv`.
+
+The file must be world-readable (`chmod a+r input/colles.csv`): a file that is only readable by its owner is not always readable inside the container.
 
 ## Expected content
 
@@ -59,6 +86,16 @@ The reader is deliberately forgiving:
 - unsupported header spellings are reported in the error message
 
 Rows with an unreadable date or time are skipped with a warning, and the rest of the file is still used. A row of data may not span several lines.
+
+## Fetching from ecolle
+
+By default, when the CSV file is missing the script falls back to logging in to your ecolle instance, as it did before 2.0.0. Since that is no longer possible for most people, the fallback can be switched off:
+
+```
+DISABLE_ECALLE_FETCH=true
+```
+
+The CSV file then becomes the only source. If it is missing, the run stops immediately with a message explaining what was looked for, instead of trying to reach ecolle. This is a good way to be sure the container is really using your file.
 
 ## What happens on an error
 

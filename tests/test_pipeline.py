@@ -144,6 +144,93 @@ class TestFetchAndSave(TempAgenda):
         with self.assertRaises(fetch.AgendaError):
             fetch.fetch_and_save()
 
+    def test_csv_is_used_even_when_scraping_is_disabled(self):
+        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        self.write_csv(HEADER + ROWS)
+        self.assertEqual(len(fetch.fetch_and_save()), 3)
+
+    def test_disabled_scraping_never_calls_the_scraper(self):
+        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        called = []
+        original = fetch.scrape_and_save
+        fetch.scrape_and_save = lambda: called.append(True) or []
+        self.addCleanup(setattr, fetch, "scrape_and_save", original)
+
+        with self.assertRaises(fetch.AgendaError):
+            fetch.fetch_and_save()
+        self.assertEqual(called, [])
+
+    def test_disabled_scraping_error_mentions_the_path(self):
+        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        with self.assertRaises(fetch.AgendaError) as caught:
+            fetch.fetch_and_save()
+        message = str(caught.exception)
+        self.assertIn(self.csv, message)
+        self.assertIn("Scraping ecolle is disabled", message)
+
+    def test_scraping_enabled_by_default(self):
+        for name in fetch.DISABLE_FETCH_NAMES:
+            os.environ.pop(name, None)
+        self.assertFalse(fetch.scraping_disabled())
+
+    def test_disable_names_and_truthy_values(self):
+        for name in fetch.DISABLE_FETCH_NAMES:
+            for value in ("true", "TRUE", "1", "yes", "on"):
+                os.environ[name] = value
+                self.assertTrue(fetch.scraping_disabled(), (name, value))
+                os.environ.pop(name)
+
+        for value in ("false", "0", "no", "", "off"):
+            os.environ["DISABLE_ECALLE_FETCH"] = value
+            self.assertFalse(fetch.scraping_disabled(), value)
+
+
+class TestMissingCsvMessages(TempAgenda):
+    def test_message_lists_nearby_csv_files(self):
+        with open(os.path.join(self.tmp.name, "my-export.csv"), "w") as handle:
+            handle.write(HEADER)
+
+        message = fetch.describe_missing_csv(self.csv)
+        self.assertIn("my-export.csv", message)
+        self.assertIn("COLLES_CSV_PATH", message)
+
+    def test_message_mentions_a_missing_directory(self):
+        missing = os.path.join(self.tmp.name, "nope", "colles.csv")
+        message = fetch.describe_missing_csv(missing)
+        self.assertIn("does not exist", message)
+
+    def test_message_says_when_no_csv_is_present(self):
+        message = fetch.describe_missing_csv(self.csv)
+        self.assertIn("no CSV file", message)
+
+    def test_message_for_a_directory_lists_its_csv_files(self):
+        directory = os.path.join(self.tmp.name, "input")
+        os.makedirs(directory)
+        with open(os.path.join(directory, "colles.csv"), "w") as handle:
+            handle.write(HEADER)
+
+        message = fetch.describe_missing_csv(directory)
+        self.assertIn("is a directory, not a file", message)
+        self.assertIn("colles.csv", message)
+        self.assertNotIn("does not exist", message)
+
+    def test_unreadable_file_is_reported_clearly(self):
+        self.write_csv(HEADER + ROWS)
+        os.chmod(self.csv, 0o000)
+        self.addCleanup(os.chmod, self.csv, 0o644)
+
+        if os.access(self.csv, os.R_OK):  # running as root, chmod proves nothing
+            self.skipTest("cannot make a file unreadable as root")
+
+        with self.assertRaises(fetch.AgendaError) as caught:
+            fetch.read_colles_csv(self.csv)
+        self.assertIn("cannot be read", str(caught.exception))
+
+    def test_directory_instead_of_file_is_reported(self):
+        with self.assertRaises(fetch.AgendaError) as caught:
+            fetch.read_colles_csv(self.tmp.name)
+        self.assertIn("is a directory", str(caught.exception))
+
 
 class TestParse(TempAgenda):
     def setUp(self):
