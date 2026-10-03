@@ -130,26 +130,40 @@ Set to `true` to never contact the ecolle website.
 
 You can change the format of your notification with a format string.
 
-- Variables need to be inside `{}`, and you can put any text between them.
-- Available variables:
+- Fields need to be inside `{}`, and you can put any text between them.
+- Available fields, from the CSV:
 
     1. `matiere`
     2. `date`
-    3. `heure`
-    4. `fin`
+    3. `heure` (start time)
+    4. `fin` (end time, may be empty)
     5. `salle`
     6. `colleur`
     7. `jour`
     8. `date_time` (date and start time together, e.g. `2026-09-24 17:00`)
 
-- Default : `{matiere} {date} {heure} {salle} {colleur}`
+- Derived field:
+
+    1. `heure_fin` — `17:00 - 18:00`, or just `17:00` when the end time is not
+       known. This is what the default format uses.
+
+- Default : `{jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})`, which
+  renders as:
+
+        jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)
 
 - Example:
 
         NTFY_FORMAT={matiere} le {date} à {heure}, salle {salle} avec {colleur}
 
 
-- Notes: an unknown field name stops the run with a message listing the available fields.
+- Fallback syntax: `{field|text}` renders `text` when `field` is empty, which is
+  useful for the optional `Jour` and `Fin` columns:
+
+        NTFY_FORMAT={matiere} {fin|fin inconnue} ({jour|jour inconnu})
+
+
+- Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up.
 
 ---
 
@@ -250,7 +264,7 @@ NTFY_TITLE=Today's colles
 
 # Optional:
 # NTFY_SERVER=https://ntfy.example.org
-# NTFY_FORMAT={matiere} {date} {heure} {salle} {colleur}
+# NTFY_FORMAT={jour} {date} {heure_fin} - {matiere} en {salle} ({colleur})
 # AGENDA_CSV_PATH=output/agenda.csv
 ```
 

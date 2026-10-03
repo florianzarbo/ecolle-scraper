@@ -319,5 +319,83 @@ class TestNotif(TempAgenda):
         self.assertIn("nope", str(caught.exception))
 
 
+COLLE = {
+    "date": "2026-09-24",
+    "heure": "17:00",
+    "date_time": "2026-09-24 17:00",
+    "matiere": "Anglais",
+    "colleur": "Mme Hatri",
+    "salle": "L037",
+    "jour": "jeudi",
+    "fin": "18:00",
+    "couleur": "",
+    "programme_links": "",
+    "popup": "",
+}
+
+
+class TestMessageFormat(unittest.TestCase):
+    """The notification body format and its derived fields."""
+
+    def setUp(self):
+        import notif
+
+        self.notif = notif
+
+    def test_default_format_mentions_the_day_and_the_times(self):
+        message = self.notif.format_message(COLLE)
+        self.assertEqual(
+            message, "jeudi 2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)"
+        )
+
+    def test_default_has_no_dangling_separator_without_an_end_time(self):
+        message = self.notif.format_message(dict(COLLE, fin=""))
+        self.assertEqual(
+            message, "jeudi 2026-09-24 17:00 - Anglais en L037 (Mme Hatri)"
+        )
+        self.assertNotIn("- -", message)
+        self.assertFalse(message.endswith("-"))
+
+    def test_default_without_a_day_name(self):
+        message = self.notif.format_message(dict(COLLE, jour=""))
+        self.assertEqual(
+            message, "2026-09-24 17:00 - 18:00 - Anglais en L037 (Mme Hatri)"
+        )
+
+    def test_heure_fin_variants(self):
+        derived = self.notif.derived_fields
+        self.assertEqual(derived(COLLE)["heure_fin"], "17:00 - 18:00")
+        self.assertEqual(derived(dict(COLLE, fin=""))["heure_fin"], "17:00")
+
+    def test_fallback_syntax_is_used_when_a_field_is_empty(self):
+        template = "{matiere} {fin|fin inconnue} {jour|?}"
+        self.assertEqual(
+            self.notif.format_message(COLLE, template), "Anglais 18:00 jeudi"
+        )
+        self.assertEqual(
+            self.notif.format_message(dict(COLLE, fin=""), template),
+            "Anglais fin inconnue jeudi",
+        )
+
+    def test_fallback_syntax_reports_unknown_fields(self):
+        with self.assertRaises(ValueError) as caught:
+            self.notif.format_message(COLLE, "{nope|x}")
+        self.assertIn("nope", str(caught.exception))
+
+    def test_the_old_default_template_still_works(self):
+        message = self.notif.format_message(
+            COLLE, "{matiere} {date} {heure} {salle} {colleur}"
+        )
+        self.assertEqual(message, "Anglais 2026-09-24 17:00 L037 Mme Hatri")
+
+    def test_whitespace_is_collapsed(self):
+        message = self.notif.format_message(COLLE, "  {matiere}   {salle}  ")
+        self.assertEqual(message, "Anglais L037")
+
+    def test_unbalanced_braces_are_reported(self):
+        with self.assertRaises(ValueError):
+            self.notif.format_message(COLLE, "{matiere")
+
+
 if __name__ == "__main__":
     unittest.main()
