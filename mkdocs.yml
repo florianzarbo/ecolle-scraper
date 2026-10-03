@@ -1,17 +1,32 @@
-site_name: E-colle scraper
+site_name: Ecolle notifications
+site_description: ntfy notifications for your ecolle colles, from a CSV export
 site_url: https://ecolle-scraper.zarbo.dev
 repo_url: https://github.com/florianzarbo/ecolle-scraper
+repo_name: florianzarbo/ecolle-scraper
+edit_uri: edit/master/docs/
+copyright: Florian Zarbo
 nav:
   - Home: index.md
   - Getting started: getting-started.md
   - CSV format: csv.md
   - Configuration: configuration.md
+  - Troubleshooting: troubleshooting.md
+  - Upgrading: upgrading.md
+  - Development: development.md
 theme:
   name: material
   font:
     text: Roboto
     code: Roboto Mono
-  palette: 
+  palette:
     scheme: slate
     primary: deep purple
     accent: pink
+  features:
+    - navigation.sections
+    - content.code.copy
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true

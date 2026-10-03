@@ -1,6 +1,6 @@
 [project]
 name = "ecolle-scraper"
-version = "2.3.0"
+version = "2.4.0"
 description = "ntfy notifications for your ecolle colles, from a CSV export"
 readme = "README.md"
 requires-python = ">=3.13"

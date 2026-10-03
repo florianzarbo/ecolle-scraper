@@ -21,6 +21,10 @@ COPY --from=builder /usr/lib/locale/locale-archive /usr/lib/locale/locale-archiv
 COPY --from=builder /etc/locale.gen /etc/locale.gen
 
 ENV LANG=fr_FR.UTF-8 LANGUAGE=fr_FR:fr LC_ALL=fr_FR.UTF-8
+# Without a timezone the container runs in UTC while the colles are written in
+# local time, so "is this colle still to come?" could be answered differently
+# than on the host. Override with the TZ environment variable if needed.
+ENV TZ=Europe/Paris
 ENV PATH="/app/.venv/bin:$PATH"
 # Upload your CSV export here, or set COLLES_CSV_PATH to somewhere else
 ENV COLLES_CSV_PATH=input/colles.csv

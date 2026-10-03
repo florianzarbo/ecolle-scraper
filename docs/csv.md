@@ -58,19 +58,19 @@ Date,Matière,Colleur,Jour,Salle,Début,Fin
 
 ## Columns
 
-| Column    | Required | Meaning                                             |
-| --------- | -------- | --------------------------------------------------- |
-| `Date`    | yes      | Date of the colle, `YYYY-MM-DD`                     |
-| `Matière` | yes      | Subject, e.g. `Mathématiques`                       |
-| `Colleur` | yes      | Who examines you                                    |
-| `Salle`   | yes      | Room                                                |
-| `Début`   | yes      | Start time, `HH:MM`                                 |
-| `Jour`    | no       | Day name, used by the `{jour}` notification field   |
-| `Fin`     | no       | End time, used by the `{fin}` notification field    |
+| Column    | Required | Meaning                                          |
+| --------- | -------- | ------------------------------------------------ |
+| `Date`    | yes      | Date of the colle, `YYYY-MM-DD`                  |
+| `Matière` | yes      | Subject, e.g. `Mathématiques`                    |
+| `Colleur` | yes      | Who examines you, shown by the `{colleur}` field |
+| `Salle`   | yes      | Room, shown by the `{salle}` field               |
+| `Début`   | yes      | Start time, `HH:MM`                              |
+| `Fin`     | no       | End time, used by the `{fin}` and `{heure_fin}` fields |
+| `Jour`    | no       | Day name. **Stored but never used**: the day is computed from `Date`, so an inconsistent value cannot mislead you |
 
 ### Date and time
 
-`Date` is parsed on its own: the `Jour` column is never used to work out the date, so an inconsistent day name cannot shift your schedule. Accepted layouts are `YYYY-MM-DD` (recommended), `DD/MM/YYYY`, `DD-MM-YYYY` and `DD.MM.YYYY`.
+`Date` is parsed on its own, so a wrong `Jour` cannot shift your schedule. Accepted layouts are `YYYY-MM-DD` (recommended), `DD/MM/YYYY`, `DD-MM-YYYY` and `DD.MM.YYYY`.
 
 `Début` accepts `HH:MM`, `HH:MM:SS`, `HHhMM` and `HHh`.
 
@@ -81,15 +81,19 @@ The reader is deliberately forgiving:
 - accents are optional: `Matiere` works as well as `Matière`
 - capitalisation, surrounding spaces, `_` and `-` in headers are ignored
 - a UTF-8 BOM (as produced by Excel) is stripped
-- extra columns are ignored
+- extra columns are ignored: any header the tool does not recognise is simply skipped
 - blank lines are skipped
-- unsupported header spellings are reported in the error message
+- a duplicate column is refused, rather than letting the last one silently win
 
 Rows with an unreadable date or time are skipped with a warning, and the rest of the file is still used. A row of data may not span several lines.
 
+### Encodings
+
+The file must be UTF-8. Excel's "CSV UTF-16" and "ANSI" exports are refused with an explicit message; re-export as **CSV UTF-8**. A UTF-16 byte-order mark is recognised and named in the error.
+
 ## Fetching from ecolle
 
-By default, when the CSV file is missing the script falls back to logging in to your ecolle instance, as it did before 2.0.0. Since that is no longer possible for most people, the fallback can be switched off:
+By default, when the CSV file is missing the script falls back to logging in to your ecolle instance, as it did before 2.0.0. That fallback needs `BASE_URL`, `COLLES_USERNAME` and `COLLES_PASSWORD`, and fails with an explanatory message when they are not set. Since the instance is usually unreachable, it is better to switch it off:
 
 ```
 DISABLE_ECOLLE_FETCH=true
@@ -99,7 +103,12 @@ The CSV file then becomes the only source. If it is missing, the run stops immed
 
 ## What happens on an error
 
-If the CSV file is missing, or cannot be used (wrong separator, missing required column, no usable row), the run stops with a clear message. When a previously normalised agenda is still present in `/app/output`, it is used instead so you keep receiving notifications; the exit code stays `0` only if a CSV or that cached agenda was usable.
+The two situations behave differently, on purpose:
+
+| Situation | What happens |
+| --------- | ------------ |
+| CSV file **missing** | the scraper fallback is tried; if it is disabled or unavailable, the run stops with an explanation and exit code `1`. The cache is **not** used. |
+| CSV file **present but unusable** (wrong separator, missing column, no usable row, bad encoding) | the run continues from the agenda cached by an earlier run, so you keep receiving notifications, and prints why. Exit code `1` only if there is no usable cache either. |
 
 ## Sample file
 

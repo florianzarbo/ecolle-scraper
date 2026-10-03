@@ -1,8 +1,25 @@
-# .env configuration
+# Configuration
 
-This project is configured via environment variables (typically stored in a `.env` file).
+This project is configured through environment variables, usually provided by a
+`.env` file next to `docker-compose.yml`.
 
-Only the variables that are **not commented out** in `.env.example` are required; commented ones are optional.
+## At a glance
+
+| Variable | Default | Required | Purpose |
+| -------- | ------- | -------- | ------- |
+| `NTFY_TOPIC` | *(empty)* | **yes** | where notifications are published |
+| `COLLES_CSV_PATH` | `input/colles.csv` | no | path of your export, **inside the container** |
+| `DISABLE_ECOLLE_FETCH` | `false` | no | never contact ecolle; the CSV is the only source |
+| `NUMBER_OF_COLLES_TO_SHOW` | `1` | no | how many upcoming colles to send |
+| `NTFY_TITLE` | *(empty)* | no | notification title |
+| `NTFY_FORMAT` | see below | no | wording of the notification |
+| `NTFY_SERVER` | `https://ntfy.sh` | no | your own ntfy instance |
+| `AGENDA_CSV_PATH` | `output/agenda.csv` | no | cache of the last run |
+| `SELF_SIGNED_CERTIFICATE` | `false` | no | accept a self-signed TLS certificate |
+| `ROOT_CA_PATH` | *(empty)* | no | CA that signed that certificate |
+| `BASE_URL`, `COLLES_USERNAME`, `COLLES_PASSWORD` | *(empty)* | no | only for the scraper fallback |
+
+`.env.example` is the template: copy it and change `NTFY_TOPIC`.
 
 Since version 2.0.0 the schedule is read from a CSV file, see [CSV format](csv.md) for the expected content.
 
@@ -21,7 +38,7 @@ services:
     env_file:
       - .env
     volumes:
-      # Upload your CSV export here
+      # Your CSV export goes here
       - ./input:/app/input:ro
       # Keeps the normalised agenda between runs
       - ./output:/app/output
@@ -33,7 +50,8 @@ Then, with your CSV at `./input/colles.csv`:
 docker compose run --rm app
 ```
 
-The container performs a single run and exits, so it can be scheduled (e.g. with cron).
+The container performs a single run and exits, so it can be scheduled, see
+[Getting started](getting-started.md#6-schedule-it).
 
 ### .env file
 
@@ -42,8 +60,8 @@ The container performs a single run and exits, so it can be scheduled (e.g. with
         cp .env.example .env
 
 
-2. Edit `.env` and set the required values.
-3. Do **not** commit `.env` (it contains secrets).
+2. Edit `.env`, see the variables below.
+3. Do **not** commit `.env` (it may contain secrets).
 
 ## Required variables
 
@@ -58,34 +76,11 @@ The ntfy topic to publish notifications to.
 
 - Tip: If using a public ntfy server, use a random topic name to reduce the risk of others guessing it.
 
-***
-
-### `NTFY_TITLE`
-
-The title used for notifications.
-
-- Example:
-
-        NTFY_TITLE=Today's colles
-
-
-- Tip: Keep quotes if there are spaces.
+- Notes: without it the run stops with `NTFY_TOPIC is not set, there is nowhere to send the notification` and exit code `1`.
 
 ***
 
-### `NUMBER_OF_COLLES_TO_SHOW`
-
-How many upcoming colles to send, starting from the soonest one.
-
-- Example:
-
-        NUMBER_OF_COLLES_TO_SHOW=1
-
-
-- Type: integer (`1`, `2`, `3`, …)
-- Default: `1`
-
-***
+## Optional variables
 
 ### `COLLES_CSV_PATH`
 
@@ -96,6 +91,7 @@ Path of the CSV export to read, **inside the container**.
 
         COLLES_CSV_PATH=input/colles.csv
         COLLES_CSV_PATH=/app/input/colles.csv
+        COLLES_CSV_PATH=./input/colles.csv
 
 
 - Notes:
@@ -120,11 +116,43 @@ Set to `true` to never contact the ecolle website.
     - With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.
     - Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if `BASE_URL`, `COLLES_USERNAME` and `COLLES_PASSWORD` are set).
     - `DISABLE_SCRAPER_FALLBACK` and `NO_SCRAPE` are accepted as alternative names.
+    - `DISABLE_ECALLE_FETCH`, the misspelt name shipped in 2.1.0, still works but is deprecated.
+
+***
+
+### `NUMBER_OF_COLLES_TO_SHOW`
+
+How many upcoming colles to send, starting from the soonest one.
+
+- Default: `1`
+- Example:
+
+        NUMBER_OF_COLLES_TO_SHOW=2
+
+
+- Notes: must be a whole number of 1 or more. Anything else stops the run with
+  an explicit message rather than sending nothing silently. Only colles that
+  have not started yet are counted, see
+  [Troubleshooting](troubleshooting.md#the-run-sends-nothing).
+
+***
+
+### `NTFY_TITLE`
+
+The title used for notifications. Optional, empty by default.
+
+- Example:
+
+        NTFY_TITLE=Today's colles
+
+
+- Tip: Keep quotes if there are spaces.
+
+***
     - `DISABLE_ECALLE_FETCH` (misspelled) is still accepted, it was shipped that way in v2.1.0 and is deprecated.
 
 ***
 
-## Optional variables
 
 ### `NTFY_FORMAT`
 
@@ -284,13 +312,11 @@ NTFY_TITLE=Today's colles
 
 ## Troubleshooting
 
-- **`CSV file not found`**: the message lists the CSV files present at that location and reminds you that `COLLES_CSV_PATH` is a *container* path. With the provided compose file, `./input/colles.csv` on your machine is `input/colles.csv` inside the container.
-- **The container ignores the CSV and tries to log in to ecolle**: you are running the pre-2.0.0 image. `docker compose pull` (or `docker compose build --pull`) and check `docker run --rm <image> --help`-free output starts with `[*] Reading CSV:`.
-- **`exists but cannot be read`**: the file is not world-readable, run `chmod a+r input/colles.csv`.
-- No notifications: Verify `NTFY_TOPIC` (and `NTFY_SERVER` if you set it).
-- `missing column(s) …`: the CSV is not the expected one, check [CSV format](csv.md). Note that a semicolon-separated export is not accepted.
-- `no usable row found`: check that the dates look like `2026-09-24` and the times like `17:00`.
-- The run stops with a message but you still get notifications: the CSV could not be read and the agenda cached in `AGENDA_CSV_PATH` was used instead.
-- Nothing is sent although the CSV contains colles: only colles that are still in the future are sent, and `NUMBER_OF_COLLES_TO_SHOW` limits how many.
-- TLS issues with self-hosted ntfy: Set `SELF_SIGNED_CERTIFICATE=true` and provide a valid `ROOT_CA_PATH`.
-- TLS issues with the scraper fallback: same, `SELF_SIGNED_CERTIFICATE` and `ROOT_CA_PATH` are used for the ecolle connection too.
+Every error message, the exit codes and the "nothing was sent" checklist have
+their own page: [Troubleshooting](troubleshooting.md).
+
+The two mistakes that account for most problems:
+
+- `COLLES_CSV_PATH` is a path **inside the container**, not on your machine.
+- only colles that have **not started yet** are sent, so a file of past dates
+  sends nothing and still exits `0`.
