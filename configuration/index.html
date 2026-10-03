@@ -481,10 +481,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#disable_ecalle_fetch" class="md-nav__link">
+  <a href="#disable_ecolle_fetch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DISABLE_ECALLE_FETCH
+        DISABLE_ECOLLE_FETCH
       
     </span>
   </a>
@@ -787,10 +787,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#disable_ecalle_fetch" class="md-nav__link">
+  <a href="#disable_ecolle_fetch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DISABLE_ECALLE_FETCH
+        DISABLE_ECOLLE_FETCH
       
     </span>
   </a>
@@ -1064,13 +1064,13 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </li>
 </ul>
 <hr />
-<h3 id="disable_ecalle_fetch"><code>DISABLE_ECALLE_FETCH</code></h3>
+<h3 id="disable_ecolle_fetch"><code>DISABLE_ECOLLE_FETCH</code></h3>
 <p>Set to <code>true</code> to never contact the ecolle website.</p>
 <ul>
 <li>Default: <code>false</code></li>
 <li>
 <p>Example:</p>
-<pre><code>DISABLE_ECALLE_FETCH=true
+<pre><code>DISABLE_ECOLLE_FETCH=true
 </code></pre>
 </li>
 <li>
@@ -1079,6 +1079,7 @@ COLLES_CSV_PATH=/app/input/colles.csv
 <li>With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.</li>
 <li>Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if <code>BASE_URL</code>, <code>COLLES_USERNAME</code> and <code>COLLES_PASSWORD</code> are set).</li>
 <li><code>DISABLE_SCRAPER_FALLBACK</code> and <code>NO_SCRAPE</code> are accepted as alternative names.</li>
+<li><code>DISABLE_ECALLE_FETCH</code> (misspelled) is still accepted, it was shipped that way in v2.1.0 and is deprecated.</li>
 </ul>
 </li>
 </ul>
@@ -1156,7 +1157,7 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </ul>
 <hr />
 <h2 id="scraper-fallback-optional">Scraper fallback (optional)</h2>
-<p>When no CSV file is found at <code>COLLES_CSV_PATH</code>, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with <a href="#disable_ecalle_fetch"><code>DISABLE_ECALLE_FETCH</code></a>.</p>
+<p>When no CSV file is found at <code>COLLES_CSV_PATH</code>, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with <a href="#disable_ecolle_fetch"><code>DISABLE_ECOLLE_FETCH</code></a>.</p>
 <h3 id="base_url"><code>BASE_URL</code></h3>
 <p>Base URL of your institution's e-colle website.</p>
 <ul>
@@ -1193,7 +1194,7 @@ COLLES_CSV_PATH=/app/input/colles.csv
 <hr />
 <h2 id="example-env">Example <code>.env</code></h2>
 <pre><code class="language-env">COLLES_CSV_PATH=input/colles.csv
-DISABLE_ECALLE_FETCH=true
+DISABLE_ECOLLE_FETCH=true
 NUMBER_OF_COLLES_TO_SHOW=2
 
 NTFY_TOPIC=mp2i-9f3a2c1d
