@@ -201,7 +201,7 @@ Path to the Root CA file (PEM) that signed your TLS certificate.
 
 ## Scraper fallback (optional)
 
-When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with `DISABLE_ECALLE_FETCH` (see above).
+When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with [`DISABLE_ECALLE_FETCH`](#disable_ecalle_fetch).
 
 ### `BASE_URL`
 
