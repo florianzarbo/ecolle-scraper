@@ -10,7 +10,7 @@ RUN apt-get update \
 ENV UV_SYSTEM_PYTHON=1 UV_NO_CACHE=1
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY pyproject.toml uv.lock .python-version ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --no-install-project
 
 
 
@@ -22,9 +22,11 @@ COPY --from=builder /etc/locale.gen /etc/locale.gen
 
 ENV LANG=fr_FR.UTF-8 LANGUAGE=fr_FR:fr LC_ALL=fr_FR.UTF-8
 ENV PATH="/app/.venv/bin:$PATH"
+# Upload your CSV export here, or set COLLES_CSV_PATH to somewhere else
+ENV COLLES_CSV_PATH=input/colles.csv
 
 COPY --from=builder /app/.venv /app/.venv
 COPY *.py /app/
-RUN mkdir -p /app/output
+RUN mkdir -p /app/input /app/output
 
 ENTRYPOINT ["/app/.venv/bin/python", "main.py"]

@@ -1,12 +1,14 @@
 [project]
 name = "ecolle-scraper"
-version = "1.2.2"
-description = "Scraper for ecolle"
+version = "2.0.0"
+description = "ntfy notifications for your ecolle colles, from a CSV export"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    # Only needed for the optional scraper fallback
     "bs4>=0.0.2",
-    "dotenv>=0.9.9",
-    "pandas>=3.0.0",
     "requests>=2.32.5",
+    # Optional convenience: .env files. Without it, real environment variables
+    # are used.
+    "python-dotenv>=1.0.0",
 ]

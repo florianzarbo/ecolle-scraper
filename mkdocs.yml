@@ -4,6 +4,7 @@ repo_url: https://github.com/florianzarbo/ecolle-scraper
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - CSV format: csv.md
   - Configuration: configuration.md
 theme:
   name: material

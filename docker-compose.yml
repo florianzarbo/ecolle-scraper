@@ -1,7 +1,14 @@
 services:
   app:
     build: .
+    image: ghcr.io/florianzarbo/ecolle-scraper:latest
     env_file:
       - .env
     volumes:
-      - ./certs:/app/certs:ro
+      # Your CSV export: upload it here and it is picked up on the next run
+      - ./input:/app/input:ro
+      # Keeps the normalised agenda between runs, used when the CSV is missing
+      - ./output:/app/output
+      # Only needed for the scraper fallback with a self-signed certificate
+      # - ./certs:/app/certs:ro
+      # - ./input/colles.csv:/app/input/colles.csv:ro
