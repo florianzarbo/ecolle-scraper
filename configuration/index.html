@@ -6,6 +6,8 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="ntfy notifications for your ecolle colles, from a CSV export">
+      
       
       
         <link rel="canonical" href="https://ecolle-scraper.zarbo.dev/configuration/">
@@ -13,6 +15,8 @@
       
         <link rel="prev" href="../csv/">
       
+      
+        <link rel="next" href="../troubleshooting/">
       
       
         
@@ -23,7 +27,7 @@
     
     
       
-        <title>Configuration - E-colle scraper</title>
+        <title>Configuration - Ecolle notifications</title>
       
     
     
@@ -72,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#env-configuration" class="md-skip">
+        <a href="#configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +92,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="E-colle scraper" class="md-header__button md-logo" aria-label="E-colle scraper" data-md-component="logo">
+    <a href=".." title="Ecolle notifications" class="md-header__button md-logo" aria-label="Ecolle notifications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +106,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            E-colle scraper
+            Ecolle notifications
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -168,7 +172,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    florianzarbo/ecolle-scraper
   </div>
 </a>
       </div>
@@ -198,13 +202,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="E-colle scraper" class="md-nav__button md-logo" aria-label="E-colle scraper" data-md-component="logo">
+    <a href=".." title="Ecolle notifications" class="md-nav__button md-logo" aria-label="Ecolle notifications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    E-colle scraper
+    Ecolle notifications
   </label>
   
     <div class="md-nav__source">
@@ -214,7 +218,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    florianzarbo/ecolle-scraper
   </div>
 </a>
     </div>
@@ -369,6 +373,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -447,27 +462,22 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ntfy_title" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NTFY_TITLE
+        Optional variables
       
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#number_of_colles_to_show" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NUMBER_OF_COLLES_TO_SHOW
-      
-    </span>
-  </a>
-  
-</li>
+    <nav class="md-nav" aria-label="Optional variables">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#colles_csv_path" class="md-nav__link">
@@ -491,22 +501,27 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-variables" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#number_of_colles_to_show" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional variables
+        NUMBER_OF_COLLES_TO_SHOW
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Optional variables">
-      <ul class="md-nav__list">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntfy_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTFY_TITLE
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ntfy_format" class="md-nav__link">
@@ -676,6 +691,87 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -701,6 +797,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#setup" class="md-nav__link">
@@ -781,27 +888,22 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ntfy_title" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NTFY_TITLE
+        Optional variables
       
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#number_of_colles_to_show" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NUMBER_OF_COLLES_TO_SHOW
-      
-    </span>
-  </a>
-  
-</li>
+    <nav class="md-nav" aria-label="Optional variables">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#colles_csv_path" class="md-nav__link">
@@ -825,22 +927,27 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-variables" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#number_of_colles_to_show" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional variables
+        NUMBER_OF_COLLES_TO_SHOW
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Optional variables">
-      <ul class="md-nav__list">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntfy_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTFY_TITLE
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ntfy_format" class="md-nav__link">
@@ -1022,13 +1129,93 @@
   
 
 
-<h1 id="env-configuration">.env configuration</h1>
-<p>This project is configured via environment variables (typically stored in a <code>.env</code> file).</p>
-<p>Only the variables that are <strong>not commented out</strong> in <code>.env.example</code> are required; commented ones are optional.</p>
+<h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<p>This project is configured through environment variables, usually provided by a
+<code>.env</code> file next to <code>docker-compose.yml</code>.</p>
+<h2 id="at-a-glance">At a glance<a class="headerlink" href="#at-a-glance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Required</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NTFY_TOPIC</code></td>
+<td><em>(empty)</em></td>
+<td><strong>yes</strong></td>
+<td>where notifications are published</td>
+</tr>
+<tr>
+<td><code>COLLES_CSV_PATH</code></td>
+<td><code>input/colles.csv</code></td>
+<td>no</td>
+<td>path of your export, <strong>inside the container</strong></td>
+</tr>
+<tr>
+<td><code>DISABLE_ECOLLE_FETCH</code></td>
+<td><code>false</code></td>
+<td>no</td>
+<td>never contact ecolle; the CSV is the only source</td>
+</tr>
+<tr>
+<td><code>NUMBER_OF_COLLES_TO_SHOW</code></td>
+<td><code>1</code></td>
+<td>no</td>
+<td>how many upcoming colles to send</td>
+</tr>
+<tr>
+<td><code>NTFY_TITLE</code></td>
+<td><em>(empty)</em></td>
+<td>no</td>
+<td>notification title</td>
+</tr>
+<tr>
+<td><code>NTFY_FORMAT</code></td>
+<td>see below</td>
+<td>no</td>
+<td>wording of the notification</td>
+</tr>
+<tr>
+<td><code>NTFY_SERVER</code></td>
+<td><code>https://ntfy.sh</code></td>
+<td>no</td>
+<td>your own ntfy instance</td>
+</tr>
+<tr>
+<td><code>AGENDA_CSV_PATH</code></td>
+<td><code>output/agenda.csv</code></td>
+<td>no</td>
+<td>cache of the last run</td>
+</tr>
+<tr>
+<td><code>SELF_SIGNED_CERTIFICATE</code></td>
+<td><code>false</code></td>
+<td>no</td>
+<td>accept a self-signed TLS certificate</td>
+</tr>
+<tr>
+<td><code>ROOT_CA_PATH</code></td>
+<td><em>(empty)</em></td>
+<td>no</td>
+<td>CA that signed that certificate</td>
+</tr>
+<tr>
+<td><code>BASE_URL</code>, <code>COLLES_USERNAME</code>, <code>COLLES_PASSWORD</code></td>
+<td><em>(empty)</em></td>
+<td>no</td>
+<td>only for the scraper fallback</td>
+</tr>
+</tbody>
+</table>
+<p><code>.env.example</code> is the template: copy it and change <code>NTFY_TOPIC</code>.</p>
 <p>Since version 2.0.0 the schedule is read from a CSV file, see <a href="../csv/">CSV format</a> for the expected content.</p>
-<h2 id="setup">Setup</h2>
-<h3 id="with-docker-compose-recommended">With docker compose (recommended)</h3>
-<h4 id="docker-composeyml">docker-compose.yml</h4>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<h3 id="with-docker-compose-recommended">With docker compose (recommended)<a class="headerlink" href="#with-docker-compose-recommended" title="Permanent link">&para;</a></h3>
+<h4 id="docker-composeyml">docker-compose.yml<a class="headerlink" href="#docker-composeyml" title="Permanent link">&para;</a></h4>
 <pre><code class="language-yaml">services:
   app:
     build: .
@@ -1037,7 +1224,7 @@
     env_file:
       - .env
     volumes:
-      # Upload your CSV export here
+      # Your CSV export goes here
       - ./input:/app/input:ro
       # Keeps the normalised agenda between runs
       - ./output:/app/output
@@ -1045,8 +1232,9 @@
 <p>Then, with your CSV at <code>./input/colles.csv</code>:</p>
 <pre><code>docker compose run --rm app
 </code></pre>
-<p>The container performs a single run and exits, so it can be scheduled (e.g. with cron).</p>
-<h3 id="env-file">.env file</h3>
+<p>The container performs a single run and exits, so it can be scheduled, see
+<a href="../getting-started/#6-schedule-it">Getting started</a>.</p>
+<h3 id="env-file">.env file<a class="headerlink" href="#env-file" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p>Copy the template:</p>
@@ -1054,12 +1242,12 @@
 </code></pre>
 </li>
 <li>
-<p>Edit <code>.env</code> and set the required values.</p>
+<p>Edit <code>.env</code>, see the variables below.</p>
 </li>
-<li>Do <strong>not</strong> commit <code>.env</code> (it contains secrets).</li>
+<li>Do <strong>not</strong> commit <code>.env</code> (it may contain secrets).</li>
 </ol>
-<h2 id="required-variables">Required variables</h2>
-<h3 id="ntfy_topic"><code>NTFY_TOPIC</code></h3>
+<h2 id="required-variables">Required variables<a class="headerlink" href="#required-variables" title="Permanent link">&para;</a></h2>
+<h3 id="ntfy_topic"><code>NTFY_TOPIC</code><a class="headerlink" href="#ntfy_topic" title="Permanent link">&para;</a></h3>
 <p>The ntfy topic to publish notifications to.</p>
 <ul>
 <li>
@@ -1070,36 +1258,13 @@
 <li>
 <p>Tip: If using a public ntfy server, use a random topic name to reduce the risk of others guessing it.</p>
 </li>
-</ul>
-<hr />
-<h3 id="ntfy_title"><code>NTFY_TITLE</code></h3>
-<p>The title used for notifications.</p>
-<ul>
 <li>
-<p>Example:</p>
-<pre><code>NTFY_TITLE=Today's colles
-</code></pre>
-</li>
-<li>
-<p>Tip: Keep quotes if there are spaces.</p>
+<p>Notes: without it the run stops with <code>NTFY_TOPIC is not set, there is nowhere to send the notification</code> and exit code <code>1</code>.</p>
 </li>
 </ul>
 <hr />
-<h3 id="number_of_colles_to_show"><code>NUMBER_OF_COLLES_TO_SHOW</code></h3>
-<p>How many upcoming colles to send, starting from the soonest one.</p>
-<ul>
-<li>
-<p>Example:</p>
-<pre><code>NUMBER_OF_COLLES_TO_SHOW=1
-</code></pre>
-</li>
-<li>
-<p>Type: integer (<code>1</code>, <code>2</code>, <code>3</code>, …)</p>
-</li>
-<li>Default: <code>1</code></li>
-</ul>
-<hr />
-<h3 id="colles_csv_path"><code>COLLES_CSV_PATH</code></h3>
+<h2 id="optional-variables">Optional variables<a class="headerlink" href="#optional-variables" title="Permanent link">&para;</a></h2>
+<h3 id="colles_csv_path"><code>COLLES_CSV_PATH</code><a class="headerlink" href="#colles_csv_path" title="Permanent link">&para;</a></h3>
 <p>Path of the CSV export to read, <strong>inside the container</strong>.</p>
 <ul>
 <li>Default: <code>input/colles.csv</code></li>
@@ -1107,6 +1272,7 @@
 <p>Examples:</p>
 <pre><code>COLLES_CSV_PATH=input/colles.csv
 COLLES_CSV_PATH=/app/input/colles.csv
+COLLES_CSV_PATH=./input/colles.csv
 </code></pre>
 </li>
 <li>
@@ -1120,7 +1286,7 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </li>
 </ul>
 <hr />
-<h3 id="disable_ecolle_fetch"><code>DISABLE_ECOLLE_FETCH</code></h3>
+<h3 id="disable_ecolle_fetch"><code>DISABLE_ECOLLE_FETCH</code><a class="headerlink" href="#disable_ecolle_fetch" title="Permanent link">&para;</a></h3>
 <p>Set to <code>true</code> to never contact the ecolle website.</p>
 <ul>
 <li>Default: <code>false</code></li>
@@ -1135,16 +1301,48 @@ COLLES_CSV_PATH=/app/input/colles.csv
 <li>With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.</li>
 <li>Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if <code>BASE_URL</code>, <code>COLLES_USERNAME</code> and <code>COLLES_PASSWORD</code> are set).</li>
 <li><code>DISABLE_SCRAPER_FALLBACK</code> and <code>NO_SCRAPE</code> are accepted as alternative names.</li>
-<li><code>DISABLE_ECALLE_FETCH</code> (misspelled) is still accepted, it was shipped that way in v2.1.0 and is deprecated.</li>
+<li><code>DISABLE_ECALLE_FETCH</code>, the misspelt name shipped in 2.1.0, still works but is deprecated.</li>
 </ul>
 </li>
 </ul>
 <hr />
-<h2 id="optional-variables">Optional variables</h2>
-<h3 id="ntfy_format"><code>NTFY_FORMAT</code></h3>
+<h3 id="number_of_colles_to_show"><code>NUMBER_OF_COLLES_TO_SHOW</code><a class="headerlink" href="#number_of_colles_to_show" title="Permanent link">&para;</a></h3>
+<p>How many upcoming colles to send, starting from the soonest one.</p>
+<ul>
+<li>Default: <code>1</code></li>
+<li>
+<p>Example:</p>
+<pre><code>NUMBER_OF_COLLES_TO_SHOW=2
+</code></pre>
+</li>
+<li>
+<p>Notes: must be a whole number of 1 or more. Anything else stops the run with
+  an explicit message rather than sending nothing silently. Only colles that
+  have not started yet are counted, see
+  <a href="../troubleshooting/#the-run-sends-nothing">Troubleshooting</a>.</p>
+</li>
+</ul>
+<hr />
+<h3 id="ntfy_title"><code>NTFY_TITLE</code><a class="headerlink" href="#ntfy_title" title="Permanent link">&para;</a></h3>
+<p>The title used for notifications. Optional, empty by default.</p>
+<ul>
+<li>
+<p>Example:</p>
+<pre><code>NTFY_TITLE=Today's colles
+</code></pre>
+</li>
+<li>
+<p>Tip: Keep quotes if there are spaces.</p>
+</li>
+</ul>
+<hr />
+<pre><code>- `DISABLE_ECALLE_FETCH` (misspelled) is still accepted, it was shipped that way in v2.1.0 and is deprecated.
+</code></pre>
+<hr />
+<h3 id="ntfy_format"><code>NTFY_FORMAT</code><a class="headerlink" href="#ntfy_format" title="Permanent link">&para;</a></h3>
 <p>You can change the format of your notification with a format string.</p>
 <p>Fields need to be inside <code>{}</code>, and you can put any text between them. Dates are written in French (<code>16 janvier</code>) and times the French way (<code>15h00</code>), no matter the locale of the machine running the container.</p>
-<h4 id="fields-from-the-csv">Fields from the CSV</h4>
+<h4 id="fields-from-the-csv">Fields from the CSV<a class="headerlink" href="#fields-from-the-csv" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1191,7 +1389,7 @@ COLLES_CSV_PATH=/app/input/colles.csv
 </tr>
 </tbody>
 </table>
-<h4 id="derived-fields">Derived fields</h4>
+<h4 id="derived-fields">Derived fields<a class="headerlink" href="#derived-fields" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1265,7 +1463,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 <li>Notes: an unknown field name stops the run with a message listing the available fields. Extra spaces and punctuation left behind by empty fields are cleaned up. If a row has no readable date at all, the date fields render empty instead of stopping the run.</li>
 </ul>
 <hr />
-<h3 id="agenda_csv_path"><code>AGENDA_CSV_PATH</code></h3>
+<h3 id="agenda_csv_path"><code>AGENDA_CSV_PATH</code><a class="headerlink" href="#agenda_csv_path" title="Permanent link">&para;</a></h3>
 <p>Where the normalised agenda is cached between runs. It is used to keep sending notifications when the CSV export cannot be read.</p>
 <ul>
 <li>Default: <code>output/agenda.csv</code></li>
@@ -1279,7 +1477,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h3 id="ntfy_server"><code>NTFY_SERVER</code></h3>
+<h3 id="ntfy_server"><code>NTFY_SERVER</code><a class="headerlink" href="#ntfy_server" title="Permanent link">&para;</a></h3>
 <p>URL of your ntfy instance.</p>
 <ul>
 <li>Default: <code>https://ntfy.sh</code></li>
@@ -1289,7 +1487,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h3 id="self_signed_certificate"><code>SELF_SIGNED_CERTIFICATE</code></h3>
+<h3 id="self_signed_certificate"><code>SELF_SIGNED_CERTIFICATE</code><a class="headerlink" href="#self_signed_certificate" title="Permanent link">&para;</a></h3>
 <p>Enable only if your server uses a self-signed TLS certificate.</p>
 <ul>
 <li>Default: <code>False</code></li>
@@ -1298,7 +1496,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h3 id="root_ca_path"><code>ROOT_CA_PATH</code></h3>
+<h3 id="root_ca_path"><code>ROOT_CA_PATH</code><a class="headerlink" href="#root_ca_path" title="Permanent link">&para;</a></h3>
 <p>Path to the Root CA file (PEM) that signed your TLS certificate.</p>
 <ul>
 <li>Example:<pre><code>ROOT_CA_PATH=/path/to/rootCA.pem
@@ -1306,9 +1504,9 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h2 id="scraper-fallback-optional">Scraper fallback (optional)</h2>
+<h2 id="scraper-fallback-optional">Scraper fallback (optional)<a class="headerlink" href="#scraper-fallback-optional" title="Permanent link">&para;</a></h2>
 <p>When no CSV file is found at <code>COLLES_CSV_PATH</code>, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with <a href="#disable_ecolle_fetch"><code>DISABLE_ECOLLE_FETCH</code></a>.</p>
-<h3 id="base_url"><code>BASE_URL</code></h3>
+<h3 id="base_url"><code>BASE_URL</code><a class="headerlink" href="#base_url" title="Permanent link">&para;</a></h3>
 <p>Base URL of your institution's e-colle website.</p>
 <ul>
 <li>
@@ -1321,7 +1519,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h3 id="colles_username"><code>COLLES_USERNAME</code></h3>
+<h3 id="colles_username"><code>COLLES_USERNAME</code><a class="headerlink" href="#colles_username" title="Permanent link">&para;</a></h3>
 <p>Your e-colle username (used to authenticate and fetch your colle agenda).</p>
 <ul>
 <li>Example:<pre><code>COLLES_USERNAME=YourUsername
@@ -1329,7 +1527,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h3 id="colles_password"><code>COLLES_PASSWORD</code></h3>
+<h3 id="colles_password"><code>COLLES_PASSWORD</code><a class="headerlink" href="#colles_password" title="Permanent link">&para;</a></h3>
 <p>Your e-colle password (used to authenticate).</p>
 <ul>
 <li>
@@ -1342,7 +1540,7 @@ NTFY_FORMAT={matiere} le {date_courte} à {heure_debut}, salle {salle}
 </li>
 </ul>
 <hr />
-<h2 id="example-env">Example <code>.env</code></h2>
+<h2 id="example-env">Example <code>.env</code><a class="headerlink" href="#example-env" title="Permanent link">&para;</a></h2>
 <pre><code class="language-env">COLLES_CSV_PATH=input/colles.csv
 DISABLE_ECOLLE_FETCH=true
 NUMBER_OF_COLLES_TO_SHOW=2
@@ -1355,18 +1553,14 @@ NTFY_TITLE=Today's colles
 # NTFY_FORMAT={jour} {date_courte} {heure_debut} {salle} - {matiere} ({colleur})
 # AGENDA_CSV_PATH=output/agenda.csv
 </code></pre>
-<h2 id="troubleshooting">Troubleshooting</h2>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Every error message, the exit codes and the "nothing was sent" checklist have
+their own page: <a href="../troubleshooting/">Troubleshooting</a>.</p>
+<p>The two mistakes that account for most problems:</p>
 <ul>
-<li><strong><code>CSV file not found</code></strong>: the message lists the CSV files present at that location and reminds you that <code>COLLES_CSV_PATH</code> is a <em>container</em> path. With the provided compose file, <code>./input/colles.csv</code> on your machine is <code>input/colles.csv</code> inside the container.</li>
-<li><strong>The container ignores the CSV and tries to log in to ecolle</strong>: you are running the pre-2.0.0 image. <code>docker compose pull</code> (or <code>docker compose build --pull</code>) and check <code>docker run --rm &lt;image&gt; --help</code>-free output starts with <code>[*] Reading CSV:</code>.</li>
-<li><strong><code>exists but cannot be read</code></strong>: the file is not world-readable, run <code>chmod a+r input/colles.csv</code>.</li>
-<li>No notifications: Verify <code>NTFY_TOPIC</code> (and <code>NTFY_SERVER</code> if you set it).</li>
-<li><code>missing column(s) …</code>: the CSV is not the expected one, check <a href="../csv/">CSV format</a>. Note that a semicolon-separated export is not accepted.</li>
-<li><code>no usable row found</code>: check that the dates look like <code>2026-09-24</code> and the times like <code>17:00</code>.</li>
-<li>The run stops with a message but you still get notifications: the CSV could not be read and the agenda cached in <code>AGENDA_CSV_PATH</code> was used instead.</li>
-<li>Nothing is sent although the CSV contains colles: only colles that are still in the future are sent, and <code>NUMBER_OF_COLLES_TO_SHOW</code> limits how many.</li>
-<li>TLS issues with self-hosted ntfy: Set <code>SELF_SIGNED_CERTIFICATE=true</code> and provide a valid <code>ROOT_CA_PATH</code>.</li>
-<li>TLS issues with the scraper fallback: same, <code>SELF_SIGNED_CERTIFICATE</code> and <code>ROOT_CA_PATH</code> are used for the ecolle connection too.</li>
+<li><code>COLLES_CSV_PATH</code> is a path <strong>inside the container</strong>, not on your machine.</li>
+<li>only colles that have <strong>not started yet</strong> are sent, so a file of past dates
+  sends nothing and still exits <code>0</code>.</li>
 </ul>
 
 
@@ -1396,6 +1590,10 @@ NTFY_TITLE=Today's colles
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
   
+    <div class="md-copyright__highlight">
+      Florian Zarbo
+    </div>
+  
   
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
@@ -1417,7 +1615,7 @@ NTFY_TITLE=Today's colles
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

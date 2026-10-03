@@ -13,7 +13,19 @@
          <lastmod>2026-10-03</lastmod>
     </url>
     <url>
+         <loc>https://ecolle-scraper.zarbo.dev/development/</loc>
+         <lastmod>2026-10-03</lastmod>
+    </url>
+    <url>
          <loc>https://ecolle-scraper.zarbo.dev/getting-started/</loc>
+         <lastmod>2026-10-03</lastmod>
+    </url>
+    <url>
+         <loc>https://ecolle-scraper.zarbo.dev/troubleshooting/</loc>
+         <lastmod>2026-10-03</lastmod>
+    </url>
+    <url>
+         <loc>https://ecolle-scraper.zarbo.dev/upgrading/</loc>
          <lastmod>2026-10-03</lastmod>
     </url>
 </urlset>
