@@ -106,20 +106,21 @@ Path of the CSV export to read, **inside the container**.
 
 ***
 
-### `DISABLE_ECALLE_FETCH`
+### `DISABLE_ECOLLE_FETCH`
 
 Set to `true` to never contact the ecolle website.
 
 - Default: `false`
 - Example:
 
-        DISABLE_ECALLE_FETCH=true
+        DISABLE_ECOLLE_FETCH=true
 
 
 - Notes:
     - With this on, the CSV file is the only source: if it is missing, the run fails with an explanatory message instead of trying to log in to ecolle.
     - Without it, a missing CSV file makes the script fall back to scraping ecolle (only possible if `BASE_URL`, `COLLES_USERNAME` and `COLLES_PASSWORD` are set).
     - `DISABLE_SCRAPER_FALLBACK` and `NO_SCRAPE` are accepted as alternative names.
+    - `DISABLE_ECALLE_FETCH` (misspelled) is still accepted, it was shipped that way in v2.1.0 and is deprecated.
 
 ***
 
@@ -201,7 +202,7 @@ Path to the Root CA file (PEM) that signed your TLS certificate.
 
 ## Scraper fallback (optional)
 
-When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with [`DISABLE_ECALLE_FETCH`](#disable_ecalle_fetch).
+When no CSV file is found at `COLLES_CSV_PATH`, the script falls back to the pre-2.0.0 behaviour and scrapes your ecolle instance. Those variables are only needed in that case, and the whole fallback can be turned off with [`DISABLE_ECOLLE_FETCH`](#disable_ecolle_fetch).
 
 ### `BASE_URL`
 
@@ -241,7 +242,7 @@ Your e-colle password (used to authenticate).
 
 ```env
 COLLES_CSV_PATH=input/colles.csv
-DISABLE_ECALLE_FETCH=true
+DISABLE_ECOLLE_FETCH=true
 NUMBER_OF_COLLES_TO_SHOW=2
 
 NTFY_TOPIC=mp2i-9f3a2c1d

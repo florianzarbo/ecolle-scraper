@@ -145,12 +145,12 @@ class TestFetchAndSave(TempAgenda):
             fetch.fetch_and_save()
 
     def test_csv_is_used_even_when_scraping_is_disabled(self):
-        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        os.environ["DISABLE_ECOLLE_FETCH"] = "true"
         self.write_csv(HEADER + ROWS)
         self.assertEqual(len(fetch.fetch_and_save()), 3)
 
     def test_disabled_scraping_never_calls_the_scraper(self):
-        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        os.environ["DISABLE_ECOLLE_FETCH"] = "true"
         called = []
         original = fetch.scrape_and_save
         fetch.scrape_and_save = lambda: called.append(True) or []
@@ -161,12 +161,19 @@ class TestFetchAndSave(TempAgenda):
         self.assertEqual(called, [])
 
     def test_disabled_scraping_error_mentions_the_path(self):
-        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        os.environ["DISABLE_ECOLLE_FETCH"] = "true"
         with self.assertRaises(fetch.AgendaError) as caught:
             fetch.fetch_and_save()
         message = str(caught.exception)
         self.assertIn(self.csv, message)
         self.assertIn("Scraping ecolle is disabled", message)
+
+    def test_deprecated_misspelling_still_works(self):
+        os.environ["DISABLE_ECALLE_FETCH"] = "true"
+        self.assertTrue(fetch.scraping_disabled())
+
+    def test_canonical_name_is_the_ecolle_spelling(self):
+        self.assertEqual(fetch.DISABLE_FETCH_NAMES[0], "DISABLE_ECOLLE_FETCH")
 
     def test_scraping_enabled_by_default(self):
         for name in fetch.DISABLE_FETCH_NAMES:
@@ -181,7 +188,7 @@ class TestFetchAndSave(TempAgenda):
                 os.environ.pop(name)
 
         for value in ("false", "0", "no", "", "off"):
-            os.environ["DISABLE_ECALLE_FETCH"] = value
+            os.environ["DISABLE_ECOLLE_FETCH"] = value
             self.assertFalse(fetch.scraping_disabled(), value)
 
 

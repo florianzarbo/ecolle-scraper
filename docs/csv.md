@@ -92,7 +92,7 @@ Rows with an unreadable date or time are skipped with a warning, and the rest of
 By default, when the CSV file is missing the script falls back to logging in to your ecolle instance, as it did before 2.0.0. Since that is no longer possible for most people, the fallback can be switched off:
 
 ```
-DISABLE_ECALLE_FETCH=true
+DISABLE_ECOLLE_FETCH=true
 ```
 
 The CSV file then becomes the only source. If it is missing, the run stops immediately with a message explaining what was looked for, instead of trying to reach ecolle. This is a good way to be sure the container is really using your file.

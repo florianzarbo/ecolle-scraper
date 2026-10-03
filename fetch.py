@@ -13,7 +13,7 @@ extra whitespace, extra columns and a BOM are all tolerated. The rows are
 normalised into ``output/agenda.csv``, which is the file :mod:`parse` reads.
 
 If the CSV file cannot be found, the legacy HTML scraper is used as a fallback,
-so an existing ecolle instance still works. Set ``DISABLE_ECALLE_FETCH=true`` to
+so an existing ecolle instance still works. Set ``DISABLE_ECOLLE_FETCH=true`` to
 turn that fallback off and use the CSV file as the only source.
 """
 
@@ -123,7 +123,8 @@ def is_true(value: str) -> bool:
 
 #: Names accepted for "never scrape ecolle, the CSV is the only source".
 DISABLE_FETCH_NAMES = (
-    "DISABLE_ECALLE_FETCH",
+    "DISABLE_ECOLLE_FETCH",
+    "DISABLE_ECALLE_FETCH",  # misspelling shipped in v2.1.0
     "DISABLE_SCRAPER_FALLBACK",
     "NO_SCRAPE",
 )
