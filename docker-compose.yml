@@ -1,0 +1,14 @@
+services:
+  app:
+    image: ghcr.io/florianzarbo/ecolle-scraper:latest
+    # Read from the .env next to this file; adjust the path if you run
+    # docker compose from somewhere else.
+    env_file:
+      - .env
+    volumes:
+      # Upload your CSV export here
+      - ./input:/app/input:ro
+      # Keeps the normalised agenda between runs
+      - ./output:/app/output
+      # Only needed for the scraper fallback with a self-signed certificate
+      # - ./certs:/app/certs:ro
